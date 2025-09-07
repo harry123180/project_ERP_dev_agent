@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "title", "goals", "non_functional", "tech_stack", "risks", "milestones"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_by": { "type": "string" },
+    "title": { "type": "string" },
+    "goals": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "non_functional": { "type": "array", "items": { "type": "string" } },
+    "tech_stack": { "type": "object" },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "desc", "due"],
+        "properties": {
+          "id": { "type": "string" },
+          "desc": { "type": "string" },
+          "due": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  }
+}

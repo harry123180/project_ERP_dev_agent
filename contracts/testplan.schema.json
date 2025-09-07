@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "cases"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_by": { "type": "string" },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "steps", "expected"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "enum": ["unit", "integration", "contract", "e2e", "perf", "sec"] },
+          "preconditions": { "type": "array", "items": { "type": "string" } },
+          "steps": { "type": "array", "items": { "type": "string" } },
+          "expected": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "architecture", "state_management", "modules", "permissions"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_by": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "architecture": {
+      "type": "object",
+      "required": ["framework", "ui_library", "state_management", "routing"],
+      "properties": {
+        "framework": { "type": "string" },
+        "ui_library": { "type": "string" },
+        "state_management": { "type": "string" },
+        "routing": { "type": "string" },
+        "http_client": { "type": "string" },
+        "build_tool": { "type": "string" },
+        "styling": { "type": "string" },
+        "patterns": { "type": "array", "items": { "type": "string" } },
+        "design_system": { "type": "object" }
+      }
+    },
+    "state_management": {
+      "type": "object",
+      "required": ["stores"],
+      "properties": {
+        "stores": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z][a-zA-Z0-9_]*$": {
+              "type": "object",
+              "required": ["purpose", "state", "actions"],
+              "properties": {
+                "purpose": { "type": "string" },
+                "state": { "type": "object" },
+                "actions": { "type": "array", "items": { "type": "string" } },
+                "getters": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z][a-zA-Z0-9_]*$": {
+          "type": "object",
+          "required": ["name", "description", "routes", "components"],
+          "properties": {
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+            "routes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["path", "name", "component", "roles"],
+                "properties": {
+                  "path": { "type": "string" },
+                  "name": { "type": "string" },
+                  "component": { "type": "string" },
+                  "roles": { "type": "array", "items": { "type": "string" } },
+                  "meta": { "type": "object" }
+                }
+              }
+            },
+            "components": {
+              "type": "object",
+              "patternProperties": {
+                "^[A-Z][a-zA-Z0-9]*$": {
+                  "type": "object",
+                  "required": ["type", "purpose"],
+                  "properties": {
+                    "type": { "enum": ["page", "component"] },
+                    "purpose": { "type": "string" },
+                    "template_structure": { "type": "array", "items": { "type": "string" } },
+                    "props": { "type": "object" },
+                    "emits": { "type": "array", "items": { "type": "string" } },
+                    "composables": { "type": "array", "items": { "type": "string" } },
+                    "ui_elements": { "type": "array", "items": { "type": "string" } },
+                    "validation_rules": { "type": "object" },
+                    "roles_visibility": { "type": "object" },
+                    "layout": { "type": "string" },
+                    "calculation_rules": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "required": ["roles"],
+      "properties": {
+        "roles": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Z][a-zA-Z0-9]*$": {
+              "type": "object",
+              "required": ["description", "pages", "actions"],
+              "properties": {
+                "description": { "type": "string" },
+                "inherits": { "type": "string" },
+                "pages": { "type": "array", "items": { "type": "string" } },
+                "actions": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api_integration": { "type": "object" },
+    "form_validation": { "type": "object" },
+    "responsive_design": { "type": "object" },
+    "testing_strategy": { "type": "object" }
+  }
+}

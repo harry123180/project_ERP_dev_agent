@@ -1,0 +1,536 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "ERP Project Manager",
+  "cases": [
+    {
+      "id": "AUTH_001",
+      "type": "integration",
+      "preconditions": [
+        "Backend API server is running",
+        "Database contains test users for all 4 roles",
+        "Frontend application is loaded"
+      ],
+      "steps": [
+        "Navigate to login page",
+        "Enter valid credentials for 'Everyone' role user",
+        "Submit login form",
+        "Verify JWT token is stored in localStorage",
+        "Verify user is redirected to dashboard",
+        "Test automatic token refresh before expiry",
+        "Test logout functionality clears token"
+      ],
+      "expected": [
+        "Login succeeds with valid credentials",
+        "JWT token is properly stored and validated",
+        "User dashboard shows role-appropriate navigation",
+        "Token refresh prevents session expiry",
+        "Logout completely clears authentication state"
+      ]
+    },
+    {
+      "id": "AUTH_002",
+      "type": "sec",
+      "preconditions": [
+        "Valid user session exists",
+        "Role-based test data is available"
+      ],
+      "steps": [
+        "Login as 'Everyone' role user",
+        "Attempt to access procurement management pages",
+        "Attempt to access accounting pages",
+        "Try to call procurement APIs directly",
+        "Test navigation restrictions in UI",
+        "Verify error messages for unauthorized access"
+      ],
+      "expected": [
+        "Everyone role can only access permitted pages",
+        "Procurement pages return 403 forbidden",
+        "Accounting pages are not accessible",
+        "API calls return proper 401/403 status codes",
+        "UI navigation hides restricted menu items",
+        "Clear error messages guide user appropriately"
+      ]
+    },
+    {
+      "id": "REQ_001",
+      "type": "e2e",
+      "preconditions": [
+        "User logged in as 'Everyone' role",
+        "Requisition module is accessible",
+        "Item categories are configured"
+      ],
+      "steps": [
+        "Navigate to Create Requisition page",
+        "Fill in requisition header (purpose, usage type)",
+        "Add first item with name, quantity=5, spec, remarks",
+        "Add second item with different specifications",
+        "Save as draft and verify status",
+        "Edit draft to modify item quantity",
+        "Submit requisition for review",
+        "Verify status changes to 'submitted'",
+        "Check requisition appears in list with correct data"
+      ],
+      "expected": [
+        "Requisition form validates all required fields",
+        "Multiple items can be added and edited",
+        "Draft functionality preserves all data",
+        "Submit action changes status properly",
+        "Requisition list shows new entry with correct status",
+        "Form handles positive integer validation for quantities",
+        "Character limits enforced for text fields"
+      ]
+    },
+    {
+      "id": "REQ_002",
+      "type": "integration", 
+      "preconditions": [
+        "User logged in as 'Procurement' role",
+        "Submitted requisitions exist",
+        "Supplier data is configured"
+      ],
+      "steps": [
+        "Navigate to Requisition Review page",
+        "Select a submitted requisition",
+        "Review first item and click approve",
+        "Select supplier and enter unit price",
+        "Approve item with pricing information",
+        "Question second item with reason",
+        "Submit approval decisions",
+        "Verify items show correct approval status",
+        "Check line item history is recorded"
+      ],
+      "expected": [
+        "Only submitted requisitions appear for review",
+        "Item-level approval interface works correctly",
+        "Supplier selection and pricing entry validated",
+        "Questioning functionality requires reason",
+        "Status updates reflect in real-time",
+        "Approval history tracks user and timestamp",
+        "Business rules prevent invalid state transitions"
+      ]
+    },
+    {
+      "id": "PO_001",
+      "type": "e2e",
+      "preconditions": [
+        "User logged in as 'Procurement' role",
+        "Approved requisition items exist",
+        "Supplier information is complete"
+      ],
+      "steps": [
+        "Navigate to PO Builder page",
+        "Select supplier from dropdown",
+        "View build candidates filtered by supplier",
+        "Select multiple approved items for PO",
+        "Verify items appear in PO preview panel",
+        "Check subtotal calculation accuracy",
+        "Verify tax calculation (1 decimal place)",
+        "Confirm grand total calculation (integer)",
+        "Save PO and verify status is 'created'",
+        "Confirm purchase order with idempotency key"
+      ],
+      "expected": [
+        "Build candidates filtered correctly by supplier",
+        "Multi-select functionality works smoothly",
+        "Real-time PO preview updates as items added",
+        "Financial calculations follow business rules",
+        "Subtotal and grand total are integers",
+        "Tax calculation maintains 1 decimal precision",
+        "PO confirmation changes status to 'purchased'",
+        "Idempotency prevents duplicate confirmations"
+      ]
+    },
+    {
+      "id": "PO_002",
+      "type": "contract",
+      "preconditions": [
+        "Backend API is available",
+        "Test requisition data exists"
+      ],
+      "steps": [
+        "Call GET /api/v1/po/build-candidates?supplier_id=T301",
+        "Verify response structure matches expected format",
+        "Call POST /api/v1/po with valid requisition lines",
+        "Check response includes all required PO fields",
+        "Call POST /api/v1/po/:poNo/confirm with Idempotency-Key",
+        "Retry same confirm call with same key",
+        "Verify idempotency behavior",
+        "Test error responses for invalid operations"
+      ],
+      "expected": [
+        "Build candidates API returns grouped items by supplier",
+        "PO creation API validates all required fields",
+        "Confirmation API requires Idempotency-Key header",
+        "Duplicate confirmation with same key is idempotent",
+        "Error responses follow standard format",
+        "HTTP status codes are appropriate (201, 204, 400, 409)",
+        "Response schemas match API specification"
+      ]
+    },
+    {
+      "id": "LEADTIME_001",
+      "type": "integration",
+      "preconditions": [
+        "User logged in as 'Procurement' role",
+        "Purchase orders with 'purchased' status exist",
+        "Logistics tracking is enabled"
+      ],
+      "steps": [
+        "Navigate to Leadtime Board",
+        "Filter by domestic/international region",
+        "Select PO from '已採購' column",
+        "Update milestone to '已發貨' with shipped date",
+        "Add carrier and tracking number",
+        "Move to '運輸中' with ETA date",
+        "Update to '預計到貨' with arrival date",
+        "Verify status progression is logical",
+        "Check all milestone data is preserved"
+      ],
+      "expected": [
+        "Kanban board displays POs in correct status columns",
+        "Regional filtering works correctly",
+        "Milestone updates validate date progression",
+        "ETA date must be after shipped date",
+        "Carrier and tracking information is required",
+        "Status transitions follow business logic",
+        "All milestone history is maintained",
+        "UI updates reflect backend status changes"
+      ]
+    },
+    {
+      "id": "RECEIVING_001",
+      "type": "e2e",
+      "preconditions": [
+        "User logged in as 'Everyone' role",
+        "POs with shipped status exist",
+        "Domestic and international deliveries configured"
+      ],
+      "steps": [
+        "Navigate to Receiving List page",
+        "Switch between domestic/international tabs",
+        "Filter by specific supplier",
+        "Select PO for receiving check",
+        "Review PO header information",
+        "Confirm receipt of first item completely",
+        "Partially receive second item (2 of 5 units)",
+        "Add receiving notes",
+        "Submit receiving confirmation",
+        "Verify receiving status updates"
+      ],
+      "expected": [
+        "Regional tabs filter correctly",
+        "Supplier filtering works as expected",
+        "PO details display complete information",
+        "Full and partial receiving both supported",
+        "Receiving quantities validated against PO",
+        "Notes field accepts relevant information",
+        "Status updates to reflect received quantities",
+        "Receiving user and timestamp recorded"
+      ]
+    },
+    {
+      "id": "INVENTORY_001",
+      "type": "integration",
+      "preconditions": [
+        "User logged in as 'Everyone' role",
+        "Received items pending warehousing exist",
+        "Storage location hierarchy configured"
+      ],
+      "steps": [
+        "Navigate to Putaway Management",
+        "View list of items pending storage",
+        "Select item for storage assignment",
+        "Choose zone from storage picker",
+        "Select shelf filtered by chosen zone",
+        "Pick floor level and position (Front/Back, L/M/R)",
+        "Assign storage location",
+        "Verify storage format Zone-Shelf-Floor-FrontBack-LMR",
+        "Complete warehousing process",
+        "Search inventory to verify item location"
+      ],
+      "expected": [
+        "Pending items list shows received goods",
+        "Storage location picker follows hierarchy",
+        "Zone selection filters available shelves",
+        "Storage format validation enforces structure",
+        "Warehousing creates inventory movement record",
+        "Storage assignment is immediately searchable",
+        "Inventory search finds item by location",
+        "Movement history tracks operator and timestamp"
+      ]
+    },
+    {
+      "id": "INVENTORY_002",
+      "type": "unit",
+      "preconditions": [
+        "User logged in as 'Everyone' role",
+        "Items with positive inventory exist",
+        "Storage locations contain stock"
+      ],
+      "steps": [
+        "Navigate to Inventory Search page",
+        "Search by item name (fuzzy matching)",
+        "Filter by specification",
+        "Filter by request number",
+        "Filter by PO number",
+        "Select item with available quantity",
+        "Click Issue button",
+        "Enter issue quantity (less than available)",
+        "Add purpose and notes",
+        "Confirm issuance"
+      ],
+      "expected": [
+        "Fuzzy search returns relevant items",
+        "Multiple filters work in combination",
+        "Search results group by storage location",
+        "Issue quantity validates against available stock",
+        "Negative inventory issuance prevented",
+        "Issuance creates movement record",
+        "Available quantity decreases correctly",
+        "Issuer information tracked with timestamp"
+      ]
+    },
+    {
+      "id": "ACCEPTANCE_001",
+      "type": "e2e",
+      "preconditions": [
+        "User logged in as original requester",
+        "Items have been received and warehoused",
+        "Acceptance workflow is configured"
+      ],
+      "steps": [
+        "Navigate to Acceptance List",
+        "View items awaiting my acceptance",
+        "Verify only items I requested appear",
+        "Select item for acceptance review",
+        "Check item details match request",
+        "Add acceptance notes if needed",
+        "Confirm item acceptance",
+        "Verify status changes to accepted",
+        "Check item is available for general use"
+      ],
+      "expected": [
+        "Only requester's items appear in list",
+        "Item details match original requisition",
+        "Acceptance restricted to original requester",
+        "Notes field accepts feedback",
+        "Status update reflects acceptance",
+        "Accepted items become available system-wide",
+        "Acceptance timestamp and user recorded",
+        "Workflow completes properly"
+      ]
+    },
+    {
+      "id": "ACCOUNTING_001",
+      "type": "integration",
+      "preconditions": [
+        "User logged in as 'ProcurementMgr' role",
+        "Confirmed POs exist for billing",
+        "Payment terms configured (30/60 days)"
+      ],
+      "steps": [
+        "Navigate to Billing Management",
+        "Select supplier and billing month",
+        "Choose payment terms (30 or 60 days)",
+        "Apply 25th cutoff date rule for month assignment",
+        "View unpaid PO candidates",
+        "Select POs for billing batch",
+        "Enter discount and other deductions",
+        "Generate billing batch",
+        "Review billing summary calculations",
+        "Mark billing batch as paid"
+      ],
+      "expected": [
+        "Supplier and month filtering works correctly",
+        "Payment terms affect PO selection",
+        "25th cutoff date calculation is accurate",
+        "Only unpaid POs appear as candidates",
+        "Billing calculations include discounts",
+        "Batch generation follows business rules",
+        "Payment marking updates PO status",
+        "Financial totals are accurate",
+        "Billing history tracks all transactions"
+      ]
+    },
+    {
+      "id": "RBAC_001",
+      "type": "sec",
+      "preconditions": [
+        "All user roles configured with test accounts",
+        "Frontend routes configured with role restrictions"
+      ],
+      "steps": [
+        "Test Everyone role: access requisitions, receiving, inventory",
+        "Test Procurement role: add requisition review and approval",
+        "Test ProcurementMgr role: add PO confirmation and billing",
+        "Test Accountant role: access billing and payment history",
+        "Verify inheritance: Procurement inherits Everyone permissions",
+        "Verify inheritance: ProcurementMgr inherits Procurement permissions",
+        "Test Admin override access to all functions",
+        "Verify role-based UI element visibility"
+      ],
+      "expected": [
+        "Everyone role limited to basic operations only",
+        "Procurement role can review and approve requisitions",
+        "ProcurementMgr can confirm POs and manage billing",
+        "Accountant has full accounting module access",
+        "Role inheritance works correctly",
+        "Admin role overrides all restrictions",
+        "UI shows/hides elements based on permissions",
+        "Unauthorized actions return 403 Forbidden"
+      ]
+    },
+    {
+      "id": "API_001",
+      "type": "contract",
+      "preconditions": [
+        "Backend API server running",
+        "Database populated with test data"
+      ],
+      "steps": [
+        "Test GET /api/v1/requisitions with pagination ?page=1&page_size=20",
+        "Test filtering ?status=submitted&requester_id=123",
+        "Test sorting ?sort=-created_at",
+        "Verify response format matches specification",
+        "Test POST /api/v1/requisitions with valid payload",
+        "Test POST with invalid data for validation errors",
+        "Test PUT /api/v1/requisitions/:id for updates",
+        "Test error responses (400, 404, 422, 500)",
+        "Verify consistent error format across all endpoints"
+      ],
+      "expected": [
+        "Pagination works correctly with page/page_size",
+        "Filtering applies correctly to results",
+        "Sorting works with specified fields",
+        "Response format matches API specification",
+        "POST creates resource and returns 201",
+        "Validation errors return 422 with field details",
+        "PUT updates resource and returns appropriate status",
+        "Error responses follow standard format",
+        "HTTP status codes match REST conventions"
+      ]
+    },
+    {
+      "id": "PERF_001", 
+      "type": "perf",
+      "preconditions": [
+        "Large dataset of 10,000+ requisitions",
+        "100+ suppliers with associated POs",
+        "Performance monitoring tools available"
+      ],
+      "steps": [
+        "Load requisitions list with 1000 items",
+        "Measure page load time (<2 seconds)",
+        "Test table sorting performance",
+        "Test filtering with multiple criteria",
+        "Load PO builder with 500+ candidates",
+        "Test real-time preview calculations",
+        "Measure API response times for complex queries",
+        "Test concurrent user scenarios (10 users)",
+        "Monitor memory usage during heavy operations"
+      ],
+      "expected": [
+        "Page loads complete within 2 seconds",
+        "Table operations (sort/filter) respond within 500ms",
+        "API queries return within 1 second for complex data",
+        "Real-time calculations update within 100ms",
+        "Concurrent users don't degrade performance significantly",
+        "Memory usage remains stable during operations",
+        "Large datasets handled efficiently with pagination",
+        "UI remains responsive during background operations"
+      ]
+    },
+    {
+      "id": "UI_001",
+      "type": "e2e",
+      "preconditions": [
+        "Frontend application running",
+        "Multiple screen sizes available for testing"
+      ],
+      "steps": [
+        "Test responsive design on mobile (768px)",
+        "Verify collapsible sidebar navigation",
+        "Test table horizontal scroll with fixed columns",
+        "Check single column form layout",
+        "Test on tablet (992px) with icon-only sidebar",
+        "Verify responsive table column hiding",
+        "Test desktop (1200px) full layout",
+        "Verify touch targets minimum 44px",
+        "Test Element Plus components styling",
+        "Verify Chinese language support"
+      ],
+      "expected": [
+        "Mobile layout uses collapsible navigation",
+        "Tables scroll horizontally with key columns fixed",
+        "Forms adapt to single column on mobile",
+        "Tablet shows icon-only sidebar navigation",
+        "Column priority hiding works on smaller screens",
+        "Desktop shows full sidebar with labels",
+        "All interactive elements meet touch target size",
+        "Element Plus theme applied consistently",
+        "Chinese text displays correctly throughout"
+      ]
+    },
+    {
+      "id": "INTEGRATION_001",
+      "type": "integration",
+      "preconditions": [
+        "Full system environment running",
+        "All modules configured and accessible"
+      ],
+      "steps": [
+        "Create requisition as Everyone user",
+        "Login as Procurement to approve requisition items",
+        "Build PO from approved items",
+        "Confirm PO as ProcurementMgr", 
+        "Update shipping status in leadtime board",
+        "Confirm receipt of goods",
+        "Assign storage location for received items",
+        "Accept items as original requester",
+        "Generate billing batch for PO",
+        "Mark batch as paid to complete cycle"
+      ],
+      "expected": [
+        "Complete workflow executes without errors",
+        "Status updates propagate between modules",
+        "Role-based permissions enforced at each step",
+        "Data consistency maintained throughout",
+        "All audit trails properly recorded",
+        "Financial calculations accurate end-to-end",
+        "Item availability updates correctly",
+        "Workflow completes with all statuses finalized",
+        "Business rules enforced across module boundaries"
+      ]
+    },
+    {
+      "id": "ERROR_001",
+      "type": "integration",
+      "preconditions": [
+        "System configured for error testing",
+        "Network interruption simulation available"
+      ],
+      "steps": [
+        "Simulate network timeout during PO creation",
+        "Test frontend error handling and user feedback",
+        "Attempt invalid status transitions",
+        "Test duplicate operations with same idempotency key",
+        "Try accessing non-existent resources",
+        "Test validation failures with detailed messages",
+        "Simulate backend service unavailable",
+        "Test frontend graceful degradation",
+        "Verify error logging and reporting"
+      ],
+      "expected": [
+        "Network errors display user-friendly messages",
+        "Invalid operations blocked with clear explanations",
+        "Idempotency keys prevent duplicate processing",
+        "404 errors handled gracefully",
+        "Validation messages guide user corrections",
+        "Service outages display appropriate notices",
+        "Frontend remains stable during errors",
+        "All errors logged for debugging",
+        "Recovery mechanisms work correctly"
+      ]
+    }
+  ]
+}

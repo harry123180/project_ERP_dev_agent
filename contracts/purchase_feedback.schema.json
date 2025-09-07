@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "feedback", "status"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_by": { "type": "string" },
+    "feedback": { "type": "string" },
+    "status": { "enum": ["approved", "rejected", "pending"] }
+  }
+}

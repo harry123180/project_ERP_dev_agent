@@ -1,0 +1,31 @@
+{
+  "clients": [
+    {
+      "server": "local-fs",
+      "transport": { "type": "stdio", "command": "mcp-local-fs" },
+      "metadata": { "rootDir": "./", "write": true }
+    },
+    {
+      "server": "local-shell",
+      "transport": { "type": "stdio", "command": "mcp-local-shell" },
+      "metadata": {
+        "allowedCommands": ["python", "pytest", "ruff", "mypy", "npm", "git"]
+      }
+    },
+    {
+      "server": "browsermcp",
+      "transport": {
+        "type": "stdio",
+        "command": "npx",
+        "args": ["@browsermcp/mcp@latest"]
+      },
+      "metadata": {
+        "baseURL": "http://localhost:5173",
+        "screenshotsDir": "./artifacts/screenshots",
+        "videosDir": "./artifacts/videos",
+        "downloadsDir": "./artifacts/downloads",
+        "defaultTimeoutMs": 15000
+      }
+    }
+  ]
+}

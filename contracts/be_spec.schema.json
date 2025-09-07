@@ -1,0 +1,13 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "endpoints", "models", "acceptance"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_by": { "type": "string" },
+    "endpoints": { "type": "array", "items": { "type": "string" } },
+    "models": { "type": "array", "items": { "type": "string" } },
+    "acceptance": { "type": "array", "items": { "type": "string" } }
+  }
+}
