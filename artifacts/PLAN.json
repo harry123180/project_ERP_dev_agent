@@ -1,184 +1,84 @@
 {
   "schema_version": "1.0",
-  "generated_by": "ERP Project Manager",
-  "title": "ERP (Enterprise Resource Planning) System Development Project",
+  "generated_by": "erp-tech-director",
+  "title": "Enterprise Resource Planning (ERP) System Development",
   "goals": [
-    "Develop a comprehensive ERP system for procurement and inventory management from requisition to payment",
-    "Implement role-based access control (RBAC) with user authentication and authorization for Everyone, Procurement, ProcurementMgr, and Accountant roles",
-    "Create a streamlined workflow: Requisition → Procurement → Logistics Tracking → Receiving → Warehousing → Acceptance → Issuance → Accounting",
-    "Build a scalable, modular architecture following CQRS principles with thin controllers and fat services",
-    "Establish real-time tracking and monitoring capabilities for the complete supply chain including domestic and international suppliers",
-    "Implement automated financial processes including billing generation, payment processing with 30/60-day terms and 25th cutoff rules",
-    "Provide comprehensive audit trails and reporting capabilities for all business transactions",
-    "Ensure data integrity and consistency across all business processes with proper state machine implementation",
-    "Support both project-specific and daily operational procurement needs with proper categorization",
-    "Implement consolidation warehouse management for international shipments and logistics coordination"
+    "Develop a comprehensive ERP system with core business modules",
+    "Implement user authentication and role-based access control",
+    "Create intuitive web-based user interfaces for all modules",
+    "Design scalable microservices architecture",
+    "Establish automated testing and deployment pipelines",
+    "Ensure system security and data protection compliance"
   ],
   "non_functional": [
-    "System must support concurrent users with role-based permissions (Everyone, Procurement, ProcurementMgr, Accountant)",
-    "Response time for API calls should be under 2 seconds for standard operations, under 5 seconds for complex queries",
-    "Database must maintain ACID properties for all financial transactions with proper isolation levels",
-    "System should be scalable to handle increasing transaction volumes and support horizontal scaling",
-    "All critical operations must support idempotency using Idempotency-Key header to prevent duplicate transactions",
-    "UI must be responsive and accessible across desktop and mobile devices with Chinese language support",
-    "System must provide comprehensive audit logging for compliance requirements with user tracking for all state changes",
-    "Consolidation warehouse support for international suppliers with bulk milestone updates and logistics coordination",
-    "Storage location hierarchy management: Zone → Shelf → Floor → Front/Back → Left/Middle/Right positioning system",
-    "Business rule enforcement: 30-day and 60-day payment terms with 25th cutoff date for billing period determination",
-    "Multi-currency support considerations for international procurement with proper rounding and precision handling",
-    "Data backup and recovery procedures must be implemented with point-in-time recovery capabilities",
-    "API endpoints must follow RESTful conventions with proper HTTP status codes (400, 403, 409, 422)",
-    "System should support internationalization with Chinese interface and proper number formatting",
-    "Financial calculations must handle integer amounts for subtotals and totals, decimal values for tax (1 decimal place)",
-    "State machine validation must prevent invalid status transitions across all business entities",
-    "Query operations should support pagination (?page=1&page_size=20) and sorting (?sort=-created_at)",
-    "Error responses must follow consistent format: {\"error\": {\"code\": \"ERROR_TYPE\", \"message\": \"...\", \"details\": {...}}}"
+    "System must handle 1000+ concurrent users",
+    "Response time under 2 seconds for standard operations",
+    "99.9% uptime availability requirement",
+    "GDPR and data privacy compliance",
+    "Mobile-responsive design for all interfaces",
+    "Audit trail for all business transactions"
   ],
   "tech_stack": {
     "frontend": {
       "framework": "Vue.js 3",
-      "ui_library": "Element Plus",
       "state_management": "Pinia",
-      "routing": "Vue Router", 
+      "ui_library": "Element Plus",
+      "router": "Vue Router",
       "http_client": "Axios",
-      "build_tool": "Vite",
-      "architecture_pattern": "MVVM with reactive stores",
-      "api_integration": "Each page maps to specific Query and Command operations"
+      "build_tool": "Vite"
     },
     "backend": {
       "framework": "Flask (Python)",
       "orm": "SQLAlchemy",
       "authentication": "JWT (Flask-JWT-Extended)",
-      "api_design": "RESTful API with CQRS principles - resource-oriented + verb commands (GET /requisitions/:id, POST /requisitions/:id/submit)",
+      "api_specification": "RESTful API",
       "cors": "Flask-CORS",
-      "environment": "python-dotenv",
-      "architecture_pattern": "Controller-Service-Repository with thin controllers",
-      "business_logic": "Fat services containing transaction logic, state machines, calculations, and data access",
-    "validation": "Input validation using Pydantic/Marshmallow schemas",
-    "response_format": "Consistent error format: {error: {code, message, details}}",
-    "status_codes": "Standard HTTP codes: 400 (Bad Request), 403 (Forbidden), 409 (Conflict), 422 (Unprocessable Entity)"
+      "environment_management": "python-dotenv"
     },
     "database": {
       "primary": "PostgreSQL 17",
       "connector": "psycopg2-binary",
-      "management_tools": "pgAdmin, DBeaver",
-      "design": "Normalized schema with proper foreign key constraints and indexes",
-      "key_tables": "Request_Order, Request_Order_Item, Purchase_Order, Purchase_Order_Item, Supplier, Storage, Storage_History, User_Purchase_History, User_Acceptance_History, User_Issue_History",
-      "constraints": "Foreign key relationships, check constraints for status transitions, unique constraints for business identifiers",
-      "indexes": "Performance indexes on frequently queried columns (po_no, supplier_id, user_id, created_at, status fields)",
-      "audit_design": "History tables for tracking all state changes with timestamp and user attribution"
+      "management_tool": "pgAdmin"
     },
-    "development": {
-      "version_control": "Git",
-      "editor": "VSCode",
-      "api_testing": "Postman/Thunder Client",
-      "deployment": "Gunicorn + Nginx (production), Flask Dev Server (development)"
-    },
-    "security": {
-      "authentication": "JWT Token",
-      "authorization": "Role-based Access Control (RBAC)",
-      "storage": "localStorage/sessionStorage for tokens",
-      "api_protection": "@require_roles decorators with Admin override capability",
-      "session_management": "JWT token expiration and refresh mechanisms",
-      "admin_override": "Admin role can override all permission restrictions for Everyone access"
-    },
-    "architecture_principles": {
-      "api_design": "Resource-oriented + Verb commands (GET /requisitions/:id, POST /requisitions/:id/submit)",
-      "cqrs_implementation": "Lightweight CQRS - GET operations use Query services, POST/PUT/PATCH/DELETE use Command services",
-      "error_handling": "Consistent error format with proper HTTP status codes",
-      "idempotency": "Support for Idempotency-Key header on state-changing operations",
-      "pagination": "Standard pagination with ?page=1&page_size=20",
-      "filtering": "Query parameters for filtering (?status=...&supplier_id=...)",
-      "sorting": "Sort parameter support (?sort=-created_at)",
-      "business_rules": "State machine validation prevents invalid status transitions",
-      "financial_precision": "Integer amounts for subtotals/totals, decimal values for tax (1 decimal place)",
-      "audit_trail": "Comprehensive logging for all state changes with user tracking",
-      "workflow_states": "Requisition (draft->submitted->reviewed->closed), PO (draft->purchased->shipped->arrived), Inventory (received->warehoused->accepted->issued)"
+    "authentication": {
+      "method": "JWT Token",
+      "permission_control": "RBAC (Role-based Access Control)",
+      "token_storage": "localStorage/sessionStorage",
+      "api_protection": "@jwt_required decorator"
     }
   },
-  "business_requirements": [
-    "Support 4 user roles with specific permissions: Everyone (basic access), Procurement (order management), ProcurementMgr (approval authority), Accountant (financial operations)",
-    "Complete workflow implementation: Requisition creation → Procurement processing → Logistics tracking → Receiving confirmation → Warehousing with location codes → Acceptance verification → Inventory issuance → Accounting settlement",
-    "Storage location management with Zone-Shelf-Floor-FrontBack-LMR structure for precise inventory tracking",
-    "Financial calculations with 30/60-day payment terms and 25th cutoff rules for monthly billing cycles",
-    "Real-time inventory tracking with movement history and audit trails for all transactions",
-    "International supplier support with consolidation warehouse management for cross-border logistics",
-    "Automated billing generation with invoice/receipt handling and payment processing workflows",
-    "State machine implementation ensuring valid transitions across all business entities",
-    "Chinese language interface with proper number formatting and cultural considerations",
-    "Project-specific vs daily operational procurement categorization and tracking"
-  ],
   "risks": [
-    "Complex business logic across 8 interconnected modules (Requisition, Procurement, Logistics, Receiving, Warehousing, Acceptance, Inventory, Accounting) may lead to integration challenges",
-    "Data consistency issues across multiple state machines for requisitions, purchase orders, and inventory items with concurrent user operations",
-    "Role-based permission complexity with 4 roles (Everyone, Procurement, ProcurementMgr, Accountant) may cause unauthorized access or over-restriction scenarios",
-    "Financial calculation precision requirements (integer subtotals, decimal tax, integer totals) may cause rounding errors in multi-currency or high-volume scenarios",
-    "Real-time inventory tracking and storage location management may face performance issues with high transaction volumes",
-    "Consolidation warehouse management for international suppliers adds complexity to logistics state synchronization",
-    "Database migration and schema evolution may disrupt existing data integrity during development phases",
-    "Frontend-backend API contract changes may break existing functionality due to tight coupling between UI and business logic",
-    "User adoption challenges due to complex workflow transitions from manual processes to automated system",
-    "Lack of experienced team members familiar with ERP domain-specific business processes and compliance requirements",
-    "Integration testing complexity across multiple workflows, user roles, and edge cases in state transitions",
-    "Potential deadlock scenarios in concurrent transaction processing for inventory operations and financial calculations",
-    "Audit trail and compliance requirements may impact system performance due to extensive logging needs",
-    "Third-party logistics API integration uncertainties for tracking and shipment management",
-    "Data migration from existing systems may encounter compatibility and data quality issues",
-    "Performance degradation under high concurrent load due to complex state machine validations and audit logging overhead",
-    "Chinese character encoding and collation issues in PostgreSQL may affect search and sorting functionality",
-    "Storage location code generation and validation complexity may impact warehouse operations efficiency",
-    "Financial calculation precision requirements may conflict with standard floating-point arithmetic limitations"
+    "Complex integration requirements between modules may cause delays",
+    "Performance bottlenecks with large datasets need careful optimization",
+    "Security vulnerabilities in authentication system require thorough testing",
+    "Database migration complexity during development iterations",
+    "Third-party API dependencies may introduce stability issues"
   ],
   "milestones": [
     {
       "id": "M1",
-      "desc": "Project Foundation - Database schema design with audit tables, user authentication system with JWT, role-based access control (RBAC) for 4 user types, and basic API framework with error handling",
+      "desc": "Complete technical architecture and database design",
+      "due": "2025-09-14"
+    },
+    {
+      "id": "M2",
+      "desc": "Implement authentication system and core user management",
       "due": "2025-09-21"
     },
     {
-      "id": "M2", 
-      "desc": "Core Models Implementation - Domain models (Requisition, Supplier, Item, PurchaseOrder) with business logic, state machines, repository patterns, and audit trail mechanisms",
+      "id": "M3",
+      "desc": "Develop frontend components and backend APIs for main modules",
       "due": "2025-10-05"
     },
     {
-      "id": "M3",
-      "desc": "Requisition Module - Complete requisition creation, approval workflow, line-item status management, and frontend interface with Vue.js components",
-      "due": "2025-10-19"
-    },
-    {
       "id": "M4",
-      "desc": "Procurement Module - Purchase order creation from approved requisitions, supplier management, financial calculations, and confirmation processes",
-      "due": "2025-11-02"
+      "desc": "Complete integration testing and performance optimization",
+      "due": "2025-10-12"
     },
     {
       "id": "M5",
-      "desc": "Logistics & Tracking - Shipment tracking, consolidation warehouse for international suppliers, milestone updates, and delivery management",
-      "due": "2025-11-16"
-    },
-    {
-      "id": "M6",
-      "desc": "Inventory Management - Receiving processes, warehousing with storage location management (Zone-Shelf-Floor-FrontBack-LMR), and inventory queries",
-      "due": "2025-11-30"
-    },
-    {
-      "id": "M7",
-      "desc": "Acceptance & Verification - User acceptance workflows by requesters, verification processes, and issuance tracking with user audit trails",
-      "due": "2025-12-14"
-    },
-    {
-      "id": "M8",
-      "desc": "Financial Module - Billing management with 30/60-day terms, 25th cutoff rules, payment processing, accounts payable integration, financial reporting, and automated invoice generation",
-      "due": "2025-12-28"
-    },
-    {
-      "id": "M9",
-      "desc": "Integration Testing & Performance - End-to-end workflow testing, performance optimization, load testing, and security validation across all modules",
-      "due": "2026-01-11"
-    },
-    {
-      "id": "M10",
-      "desc": "User Acceptance Testing & Deployment - Final UAT with stakeholders, documentation completion, production deployment, and go-live support",
-      "due": "2026-01-25"
+      "desc": "Deploy production environment and conduct user acceptance testing",
+      "due": "2025-10-19"
     }
   ]
 }

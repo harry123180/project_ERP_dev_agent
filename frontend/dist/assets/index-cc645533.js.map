@@ -1,0 +1,1 @@
+{"version":3,"file":"index-cc645533.js","sources":["../../src/views/inventory/index.vue"],"sourcesContent":["<template>\r\n  <div>\r\n    <router-view />\r\n  </div>\r\n</template>\r\n\r\n<script setup lang=\"ts\">\r\n// Inventory module entry point\r\n</script>"],"names":["_createVNode","_component_router_view"],"mappings":"8KAGQA,EAAAC,CAAA,CADW,CAAA"}

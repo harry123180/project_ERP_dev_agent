@@ -1,0 +1,523 @@
+# Prometheus Configuration for ERP System Monitoring
+# Comprehensive monitoring setup with business metrics
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'erp-production'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Rules files
+rule_files:
+  - "erp_alerts.yml"
+  - "business_alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # ERP Backend Services
+  - job_name: 'erp-backend'
+    static_configs:
+      - targets: ['backend-service:5000']
+    metrics_path: /metrics
+    scrape_interval: 10s
+    scrape_timeout: 10s
+    params:
+      format: ['prometheus']
+
+  # ERP Frontend (if metrics exposed)
+  - job_name: 'erp-frontend'
+    static_configs:
+      - targets: ['frontend-service:80']
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  # PostgreSQL Database
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 15s
+
+  # Redis Cache
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 15s
+
+  # Node Exporter (System metrics)
+  - job_name: 'node-exporter'
+    kubernetes_sd_configs:
+      - role: node
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.*):10250'
+        target_label: __address__
+        replacement: '${1}:9100'
+      - source_labels: [__meta_kubernetes_node_label_kubernetes_io_hostname]
+        target_label: instance
+
+  # Kubernetes API Server
+  - job_name: 'kubernetes-apiservers'
+    kubernetes_sd_configs:
+      - role: endpoints
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      insecure_skip_verify: true
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: default;kubernetes;https
+
+  # Kubernetes Nodes
+  - job_name: 'kubernetes-nodes'
+    kubernetes_sd_configs:
+      - role: node
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      insecure_skip_verify: true
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+
+  # Kubernetes Pods
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+
+  # Kubernetes Services
+  - job_name: 'kubernetes-service-endpoints'
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+        action: replace
+        target_label: __scheme__
+        regex: (https?)
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+        action: replace
+        target_label: __address__
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_service_name]
+        action: replace
+        target_label: kubernetes_name
+
+  # NGINX Ingress Controller
+  - job_name: 'nginx-ingress'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - ingress-nginx
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+        action: keep
+        regex: ingress-nginx
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        action: keep
+        regex: "10254"
+
+  # Custom business metrics scraping
+  - job_name: 'erp-business-metrics'
+    static_configs:
+      - targets: ['backend-service:5000']
+    metrics_path: /api/metrics/business
+    scrape_interval: 30s
+    params:
+      format: ['prometheus']
+
+---
+# Alert Rules Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alert-rules
+  namespace: erp-system
+data:
+  erp_alerts.yml: |
+    groups:
+    - name: erp_system_alerts
+      rules:
+      # High-level system alerts
+      - alert: ERPSystemDown
+        expr: up{job="erp-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: erp-backend
+        annotations:
+          summary: "ERP Backend service is down"
+          description: "ERP Backend service has been down for more than 1 minute"
+          runbook_url: "https://wiki.company.com/runbooks/erp-backend-down"
+
+      - alert: ERPHighResponseTime
+        expr: histogram_quantile(0.95, rate(flask_http_request_duration_seconds_bucket{job="erp-backend"}[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: erp-backend
+        annotations:
+          summary: "ERP API response time is high"
+          description: "95th percentile response time is {{ $value }}s for more than 5 minutes"
+
+      - alert: ERPHighErrorRate
+        expr: rate(flask_http_request_exceptions_total{job="erp-backend"}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          service: erp-backend
+        annotations:
+          summary: "ERP API error rate is high"
+          description: "Error rate is {{ $value }} requests/second"
+
+      # Database alerts
+      - alert: PostgreSQLDown
+        expr: up{job="postgresql"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: postgresql
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database has been down for more than 1 minute"
+
+      - alert: PostgreSQLHighConnections
+        expr: pg_stat_database_numbackends{job="postgresql"} / pg_settings_max_connections{job="postgresql"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: postgresql
+        annotations:
+          summary: "PostgreSQL connection usage is high"
+          description: "Database connection usage is {{ $value | humanizePercentage }}"
+
+      - alert: PostgreSQLSlowQueries
+        expr: rate(pg_stat_database_tup_fetched{job="postgresql"}[5m]) / rate(pg_stat_database_tup_returned{job="postgresql"}[5m]) < 0.1
+        for: 10m
+        labels:
+          severity: warning
+          service: postgresql
+        annotations:
+          summary: "PostgreSQL has slow queries"
+          description: "Query efficiency is low: {{ $value | humanizePercentage }}"
+
+      # Redis alerts
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache has been down for more than 1 minute"
+
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes{job="redis"} / redis_memory_max_bytes{job="redis"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}"
+
+      # Container and infrastructure alerts
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total{name!=""}[5m]) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "Container {{ $labels.name }} CPU usage is {{ $value }}%"
+
+      - alert: HighMemoryUsage
+        expr: (container_memory_usage_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""}) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Container {{ $labels.name }} memory usage is {{ $value }}%"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space is low"
+          description: "Disk space on {{ $labels.instance }} is {{ $value }}% available"
+
+      # Kubernetes alerts
+      - alert: KubernetesPodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 15 > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pod is crash looping"
+          description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
+
+      - alert: KubernetesPodNotReady
+        expr: kube_pod_status_ready{condition="false"} == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pod is not ready"
+          description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been not ready for more than 5 minutes"
+
+  business_alerts.yml: |
+    groups:
+    - name: erp_business_alerts
+      rules:
+      # Business process alerts
+      - alert: HighRequisitionCreationRate
+        expr: rate(erp_requisitions_created_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "High requisition creation rate"
+          description: "Requisition creation rate is {{ $value }} per second"
+
+      - alert: LowRequisitionApprovalRate
+        expr: rate(erp_requisitions_approved_total[30m]) / rate(erp_requisitions_created_total[30m]) < 0.7
+        for: 15m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Low requisition approval rate"
+          description: "Approval rate is {{ $value | humanizePercentage }} over the last 30 minutes"
+
+      - alert: StuckPurchaseOrders
+        expr: erp_purchase_orders_pending_total > 50
+        for: 1h
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Many purchase orders are stuck"
+          description: "{{ $value }} purchase orders have been pending for over 1 hour"
+
+      - alert: SupplierDeliveryDelays
+        expr: erp_delivery_delays_total > 10
+        for: 30m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Multiple supplier delivery delays"
+          description: "{{ $value }} deliveries are delayed"
+
+      # User activity alerts
+      - alert: LowUserActivity
+        expr: rate(erp_user_login_total[1h]) < 5
+        for: 2h
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low user activity"
+          description: "User login rate is {{ $value }} per second over the last hour"
+
+      - alert: HighFailedLoginAttempts
+        expr: rate(erp_failed_login_attempts_total[10m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          category: security
+        annotations:
+          summary: "High failed login attempts"
+          description: "Failed login rate is {{ $value }} per second"
+
+      # Data integrity alerts
+      - alert: MissingRequisitionItems
+        expr: erp_requisitions_without_items_total > 0
+        for: 5m
+        labels:
+          severity: warning
+          category: data_integrity
+        annotations:
+          summary: "Requisitions without items detected"
+          description: "{{ $value }} requisitions have no items"
+
+      - alert: OrphanedPurchaseOrders
+        expr: erp_purchase_orders_without_requisition_total > 0
+        for: 15m
+        labels:
+          severity: warning
+          category: data_integrity
+        annotations:
+          summary: "Purchase orders without requisitions detected"
+          description: "{{ $value }} purchase orders have no associated requisition"
+
+---
+# Alertmanager Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: erp-system
+data:
+  alertmanager.yml: |
+    global:
+      smtp_smarthost: 'smtp.company.com:587'
+      smtp_from: 'erp-alerts@company.com'
+      smtp_auth_username: 'erp-alerts@company.com'
+      smtp_auth_password: 'smtp-password'
+
+    route:
+      group_by: ['alertname', 'severity']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
+      receiver: 'web.hook'
+      routes:
+      - match:
+          severity: critical
+        receiver: 'critical-alerts'
+        group_wait: 5s
+        repeat_interval: 5m
+      - match:
+          severity: warning
+        receiver: 'warning-alerts'
+        repeat_interval: 30m
+      - match:
+          category: business
+        receiver: 'business-alerts'
+        repeat_interval: 1h
+      - match:
+          category: security
+        receiver: 'security-alerts'
+        group_wait: 2s
+        repeat_interval: 15m
+
+    receivers:
+    - name: 'web.hook'
+      webhook_configs:
+      - url: 'http://webhook-service:5000/alerts'
+        send_resolved: true
+
+    - name: 'critical-alerts'
+      email_configs:
+      - to: 'ops-team@company.com,devops@company.com'
+        subject: '[CRITICAL] ERP System Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Alert: {{ .GroupLabels.alertname }}
+          Severity: {{ .CommonLabels.severity }}
+          
+          {{ range .Alerts }}
+          - {{ .Annotations.summary }}
+            {{ .Annotations.description }}
+            Labels: {{ .Labels }}
+          {{ end }}
+      slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#erp-alerts'
+        title: 'Critical ERP Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+
+    - name: 'warning-alerts'
+      email_configs:
+      - to: 'erp-team@company.com'
+        subject: '[WARNING] ERP System Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Alert: {{ .GroupLabels.alertname }}
+          Severity: {{ .CommonLabels.severity }}
+          
+          {{ range .Alerts }}
+          - {{ .Annotations.summary }}
+            {{ .Annotations.description }}
+          {{ end }}
+
+    - name: 'business-alerts'
+      email_configs:
+      - to: 'business-team@company.com,procurement@company.com'
+        subject: '[BUSINESS] ERP Process Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Business Process Alert: {{ .GroupLabels.alertname }}
+          
+          {{ range .Alerts }}
+          - {{ .Annotations.summary }}
+            {{ .Annotations.description }}
+          {{ end }}
+
+    - name: 'security-alerts'
+      email_configs:
+      - to: 'security@company.com,ops-team@company.com'
+        subject: '[SECURITY] ERP Security Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Security Alert: {{ .GroupLabels.alertname }}
+          Severity: {{ .CommonLabels.severity }}
+          
+          {{ range .Alerts }}
+          - {{ .Annotations.summary }}
+            {{ .Annotations.description }}
+            Time: {{ .StartsAt }}
+          {{ end }}
+      slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SECURITY/WEBHOOK'
+        channel: '#security-alerts'
+        title: 'ERP Security Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+
+    inhibit_rules:
+    - source_match:
+        severity: 'critical'
+      target_match:
+        severity: 'warning'
+      equal: ['alertname', 'instance']

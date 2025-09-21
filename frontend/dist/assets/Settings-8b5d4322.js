@@ -1,0 +1,2 @@
+import{d as s,c as n,b as t,o,_}from"./index-61294aba.js";const r={class:"system-settings"},a=s({__name:"Settings",setup(c){return(i,e)=>(o(),n("div",r,[...e[0]||(e[0]=[t("h1",null,"系統設定",-1),t("p",null,"系統設定功能開發中...",-1)])]))}}),p=_(a,[["__file","D:/AWORKSPACE/Github/project_ERP_dev_agent/frontend/src/views/system/Settings.vue"]]);export{p as default};
+//# sourceMappingURL=Settings-8b5d4322.js.map

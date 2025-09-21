@@ -1,0 +1,1477 @@
+{
+  "backend": {
+    "overview": {
+      "total_files": 23,
+      "total_lines": 3984,
+      "total_classes": 19,
+      "total_functions": 159,
+      "total_routes": 42,
+      "total_models": 15
+    },
+    "models": {
+      "consolidation": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\consolidation.py",
+        "lines": 148,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "ShipmentConsolidation",
+          "ConsolidationPO"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_consolidation_id",
+          "can_add_po",
+          "add_po",
+          "remove_po",
+          "bulk_update_milestone",
+          "get_po_count",
+          "to_dict",
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "ShipmentConsolidation",
+          "ConsolidationPO"
+        ]
+      },
+      "item_category": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\item_category.py",
+        "lines": 30,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "ItemCategory"
+        ],
+        "functions": [
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "ItemCategory"
+        ]
+      },
+      "logistics": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\logistics.py",
+        "lines": 65,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "LogisticsEvent"
+        ],
+        "functions": [
+          "__repr__",
+          "create_po_event",
+          "create_consolidation_event",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "LogisticsEvent"
+        ]
+      },
+      "project": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\project.py",
+        "lines": 106,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "Project",
+          "ProjectSupplierExpenditure"
+        ],
+        "functions": [
+          "__repr__",
+          "calculate_total_expenditure",
+          "add_expenditure",
+          "get_supplier_breakdown",
+          "to_dict",
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Project",
+          "ProjectSupplierExpenditure"
+        ]
+      },
+      "purchase_order": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\purchase_order.py",
+        "lines": 263,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import",
+          "import uuid"
+        ],
+        "classes": [
+          "PurchaseOrder",
+          "PurchaseOrderItem"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_po_number",
+          "can_edit",
+          "can_confirm",
+          "confirm_purchase",
+          "withdraw",
+          "recalculate_totals",
+          "update_milestone",
+          "is_ready_for_receiving",
+          "to_dict",
+          "__repr__",
+          "get_line_subtotal",
+          "update_line_subtotal",
+          "mark_purchased",
+          "mark_shipped",
+          "mark_arrived",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "PurchaseOrder",
+          "PurchaseOrderItem"
+        ]
+      },
+      "request_order": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\request_order.py",
+        "lines": 198,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "RequestOrder",
+          "RequestOrderItem"
+        ],
+        "functions": [
+          "__repr__",
+          "can_edit",
+          "can_submit",
+          "submit",
+          "reject",
+          "get_summary",
+          "to_dict",
+          "__repr__",
+          "can_approve",
+          "approve",
+          "question",
+          "reject",
+          "mark_unavailable",
+          "get_subtotal",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "RequestOrder",
+          "RequestOrderItem"
+        ]
+      },
+      "storage": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\storage.py",
+        "lines": 201,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "Storage",
+          "StorageHistory"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_storage_id",
+          "create_storage_location",
+          "get_current_inventory",
+          "to_dict",
+          "__repr__",
+          "create_in_record",
+          "create_out_record",
+          "get_current_quantity",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Storage",
+          "StorageHistory"
+        ]
+      },
+      "supplier": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\supplier.py",
+        "lines": 58,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "Supplier"
+        ],
+        "functions": [
+          "__repr__",
+          "to_dict",
+          "to_summary_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Supplier"
+        ]
+      },
+      "system_settings": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\system_settings.py",
+        "lines": 121,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "SystemSettings"
+        ],
+        "functions": [
+          "__repr__",
+          "get_setting",
+          "get_decimal_setting",
+          "get_float_setting",
+          "get_int_setting",
+          "get_bool_setting",
+          "set_setting",
+          "get_tax_rate",
+          "get_company_name",
+          "get_company_settings",
+          "get_all_settings_by_type",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "SystemSettings"
+        ]
+      },
+      "user": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\user.py",
+        "lines": 50,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from werkzeug.security import"
+        ],
+        "classes": [
+          "User"
+        ],
+        "functions": [
+          "__repr__",
+          "set_password",
+          "check_password",
+          "has_role",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "User"
+        ]
+      },
+      "__init__": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\__init__.py",
+        "lines": 28,
+        "imports": [
+          "from .user import",
+          "from .supplier import",
+          "from .item_category import",
+          "from .request_order import",
+          "from .purchase_order import",
+          "from .consolidation import",
+          "from .logistics import",
+          "from .storage import",
+          "from .project import",
+          "from .system_settings import"
+        ],
+        "classes": [],
+        "functions": [],
+        "routes": [],
+        "models": []
+      }
+    },
+    "routes": {
+      "accounting": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\accounting.py",
+        "lines": 437,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.purchase_order import",
+          "from app.models.supplier import",
+          "from app.auth import",
+          "from datetime import",
+          "from dateutil.relativedelta import",
+          "from decimal import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_billing_candidates",
+          "generate_billing",
+          "mark_batch_paid",
+          "mark_po_paid",
+          "get_payment_history",
+          "get_accounting_summary"
+        ],
+        "routes": [
+          "/billing/candidates",
+          "/billing",
+          "/billing/<billing_id>/mark-paid",
+          "/po/<po_no>/mark-paid",
+          "/history",
+          "/reports/summary"
+        ],
+        "models": []
+      },
+      "auth": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\auth.py",
+        "lines": 183,
+        "imports": [
+          "from flask import",
+          "from flask_jwt_extended import",
+          "from app import",
+          "from app.models.user import",
+          "from app.auth import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "login",
+          "refresh",
+          "logout",
+          "get_current_user",
+          "change_password"
+        ],
+        "routes": [
+          "/login",
+          "/refresh",
+          "/logout",
+          "/me",
+          "/change-password"
+        ],
+        "models": []
+      },
+      "inventory": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\inventory.py",
+        "lines": 573,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.storage import",
+          "from app.models.purchase_order import",
+          "from app.models.request_order import",
+          "from app.auth import",
+          "from sqlalchemy import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_storage_tree",
+          "create_zone",
+          "list_receiving",
+          "get_receiving_details",
+          "confirm_item_received",
+          "list_putaway",
+          "assign_storage",
+          "search_inventory",
+          "issue_inventory",
+          "get_my_acceptance",
+          "confirm_acceptance"
+        ],
+        "routes": [
+          "/storage/tree",
+          "/storage/admin/zones",
+          "/receiving",
+          "/receiving/po/<po_no>",
+          "/receiving/po/<po_no>/items/<int:detail_id>/confirm",
+          "/putaway",
+          "/putaway/assign",
+          "/inventory",
+          "/inventory/issue",
+          "/acceptance/mine",
+          "/acceptance/confirm"
+        ],
+        "models": []
+      },
+      "purchase_orders": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\purchase_orders.py",
+        "lines": 374,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.purchase_order import",
+          "from app.models.request_order import",
+          "from app.models.supplier import",
+          "from app.models.system_settings import",
+          "from app.auth import",
+          "from datetime import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_build_candidates",
+          "create_purchase_order",
+          "list_purchase_orders",
+          "get_purchase_order",
+          "update_purchase_order",
+          "confirm_purchase",
+          "withdraw_purchase_order",
+          "update_milestone"
+        ],
+        "routes": [
+          "/build-candidates",
+          "/<po_no>",
+          "/<po_no>",
+          "/<po_no>/confirm",
+          "/<po_no>/withdraw",
+          "/<po_no>/milestone"
+        ],
+        "models": []
+      },
+      "requisitions": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\requisitions.py",
+        "lines": 402,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.request_order import",
+          "from app.models.item_category import",
+          "from app.auth import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_requisitions",
+          "create_requisition",
+          "get_requisition",
+          "update_requisition",
+          "submit_requisition",
+          "approve_line",
+          "question_line",
+          "reject_line",
+          "reject_requisition"
+        ],
+        "routes": [
+          "/<request_order_no>",
+          "/<request_order_no>",
+          "/<request_order_no>/submit",
+          "/<request_order_no>/lines/<int:detail_id>/approve",
+          "/<request_order_no>/lines/<int:detail_id>/question",
+          "/<request_order_no>/lines/<int:detail_id>/reject",
+          "/<request_order_no>/reject"
+        ],
+        "models": []
+      },
+      "suppliers": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\suppliers.py",
+        "lines": 191,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.supplier import",
+          "from app.auth import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_suppliers",
+          "create_supplier",
+          "get_supplier",
+          "update_supplier",
+          "get_suppliers_summary"
+        ],
+        "routes": [
+          "/<supplier_id>",
+          "/<supplier_id>",
+          "/summary"
+        ],
+        "models": []
+      },
+      "users": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\users.py",
+        "lines": 168,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.user import",
+          "from app.auth import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_users",
+          "create_user",
+          "get_user",
+          "update_user",
+          "get_roles"
+        ],
+        "routes": [
+          "/<int:user_id>",
+          "/<int:user_id>",
+          "/roles"
+        ],
+        "models": []
+      },
+      "__init__": {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\__init__.py",
+        "lines": 1,
+        "imports": [],
+        "classes": [],
+        "functions": [],
+        "routes": [],
+        "models": []
+      }
+    },
+    "files": [
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app.py",
+        "lines": 111,
+        "imports": [
+          "import os",
+          "from app import",
+          "from app.models import",
+          "from app.models import",
+          "from werkzeug.security import"
+        ],
+        "classes": [],
+        "functions": [
+          "make_shell_context",
+          "init_db",
+          "seed_db"
+        ],
+        "routes": [],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\config.py",
+        "lines": 45,
+        "imports": [
+          "import os",
+          "from datetime import",
+          "from dotenv import"
+        ],
+        "classes": [
+          "Config",
+          "DevelopmentConfig",
+          "ProductionConfig",
+          "TestingConfig"
+        ],
+        "functions": [],
+        "routes": [],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\auth.py",
+        "lines": 123,
+        "imports": [
+          "from functools import",
+          "from flask import",
+          "from flask_jwt_extended import",
+          "from app.models.user import"
+        ],
+        "classes": [],
+        "functions": [
+          "require_roles",
+          "decorator",
+          "decorated_function",
+          "get_current_user",
+          "admin_required",
+          "procurement_required",
+          "procurement_manager_required",
+          "accountant_required",
+          "authenticated_required",
+          "is_token_revoked",
+          "revoke_token",
+          "create_response",
+          "create_error_response",
+          "paginate_query"
+        ],
+        "routes": [],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\__init__.py",
+        "lines": 108,
+        "imports": [
+          "import os",
+          "from flask import",
+          "from flask_sqlalchemy import",
+          "from flask_jwt_extended import",
+          "from flask_cors import",
+          "from flask_migrate import",
+          "from config import",
+          "from app.routes import"
+        ],
+        "classes": [],
+        "functions": [
+          "create_app",
+          "expired_token_callback",
+          "invalid_token_callback",
+          "missing_token_callback",
+          "bad_request",
+          "not_found",
+          "internal_error",
+          "health_check"
+        ],
+        "routes": [
+          "/health"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\consolidation.py",
+        "lines": 148,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "ShipmentConsolidation",
+          "ConsolidationPO"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_consolidation_id",
+          "can_add_po",
+          "add_po",
+          "remove_po",
+          "bulk_update_milestone",
+          "get_po_count",
+          "to_dict",
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "ShipmentConsolidation",
+          "ConsolidationPO"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\item_category.py",
+        "lines": 30,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "ItemCategory"
+        ],
+        "functions": [
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "ItemCategory"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\logistics.py",
+        "lines": 65,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "LogisticsEvent"
+        ],
+        "functions": [
+          "__repr__",
+          "create_po_event",
+          "create_consolidation_event",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "LogisticsEvent"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\project.py",
+        "lines": 106,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "Project",
+          "ProjectSupplierExpenditure"
+        ],
+        "functions": [
+          "__repr__",
+          "calculate_total_expenditure",
+          "add_expenditure",
+          "get_supplier_breakdown",
+          "to_dict",
+          "__repr__",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Project",
+          "ProjectSupplierExpenditure"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\purchase_order.py",
+        "lines": 263,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import",
+          "import uuid"
+        ],
+        "classes": [
+          "PurchaseOrder",
+          "PurchaseOrderItem"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_po_number",
+          "can_edit",
+          "can_confirm",
+          "confirm_purchase",
+          "withdraw",
+          "recalculate_totals",
+          "update_milestone",
+          "is_ready_for_receiving",
+          "to_dict",
+          "__repr__",
+          "get_line_subtotal",
+          "update_line_subtotal",
+          "mark_purchased",
+          "mark_shipped",
+          "mark_arrived",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "PurchaseOrder",
+          "PurchaseOrderItem"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\request_order.py",
+        "lines": 198,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "RequestOrder",
+          "RequestOrderItem"
+        ],
+        "functions": [
+          "__repr__",
+          "can_edit",
+          "can_submit",
+          "submit",
+          "reject",
+          "get_summary",
+          "to_dict",
+          "__repr__",
+          "can_approve",
+          "approve",
+          "question",
+          "reject",
+          "mark_unavailable",
+          "get_subtotal",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "RequestOrder",
+          "RequestOrderItem"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\storage.py",
+        "lines": 201,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "Storage",
+          "StorageHistory"
+        ],
+        "functions": [
+          "__repr__",
+          "generate_storage_id",
+          "create_storage_location",
+          "get_current_inventory",
+          "to_dict",
+          "__repr__",
+          "create_in_record",
+          "create_out_record",
+          "get_current_quantity",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Storage",
+          "StorageHistory"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\supplier.py",
+        "lines": 58,
+        "imports": [
+          "from datetime import",
+          "from app import"
+        ],
+        "classes": [
+          "Supplier"
+        ],
+        "functions": [
+          "__repr__",
+          "to_dict",
+          "to_summary_dict"
+        ],
+        "routes": [],
+        "models": [
+          "Supplier"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\system_settings.py",
+        "lines": 121,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from decimal import"
+        ],
+        "classes": [
+          "SystemSettings"
+        ],
+        "functions": [
+          "__repr__",
+          "get_setting",
+          "get_decimal_setting",
+          "get_float_setting",
+          "get_int_setting",
+          "get_bool_setting",
+          "set_setting",
+          "get_tax_rate",
+          "get_company_name",
+          "get_company_settings",
+          "get_all_settings_by_type",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "SystemSettings"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\user.py",
+        "lines": 50,
+        "imports": [
+          "from datetime import",
+          "from app import",
+          "from werkzeug.security import"
+        ],
+        "classes": [
+          "User"
+        ],
+        "functions": [
+          "__repr__",
+          "set_password",
+          "check_password",
+          "has_role",
+          "to_dict"
+        ],
+        "routes": [],
+        "models": [
+          "User"
+        ]
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\models\\__init__.py",
+        "lines": 28,
+        "imports": [
+          "from .user import",
+          "from .supplier import",
+          "from .item_category import",
+          "from .request_order import",
+          "from .purchase_order import",
+          "from .consolidation import",
+          "from .logistics import",
+          "from .storage import",
+          "from .project import",
+          "from .system_settings import"
+        ],
+        "classes": [],
+        "functions": [],
+        "routes": [],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\accounting.py",
+        "lines": 437,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.purchase_order import",
+          "from app.models.supplier import",
+          "from app.auth import",
+          "from datetime import",
+          "from dateutil.relativedelta import",
+          "from decimal import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_billing_candidates",
+          "generate_billing",
+          "mark_batch_paid",
+          "mark_po_paid",
+          "get_payment_history",
+          "get_accounting_summary"
+        ],
+        "routes": [
+          "/billing/candidates",
+          "/billing",
+          "/billing/<billing_id>/mark-paid",
+          "/po/<po_no>/mark-paid",
+          "/history",
+          "/reports/summary"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\auth.py",
+        "lines": 183,
+        "imports": [
+          "from flask import",
+          "from flask_jwt_extended import",
+          "from app import",
+          "from app.models.user import",
+          "from app.auth import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "login",
+          "refresh",
+          "logout",
+          "get_current_user",
+          "change_password"
+        ],
+        "routes": [
+          "/login",
+          "/refresh",
+          "/logout",
+          "/me",
+          "/change-password"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\inventory.py",
+        "lines": 573,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.storage import",
+          "from app.models.purchase_order import",
+          "from app.models.request_order import",
+          "from app.auth import",
+          "from sqlalchemy import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_storage_tree",
+          "create_zone",
+          "list_receiving",
+          "get_receiving_details",
+          "confirm_item_received",
+          "list_putaway",
+          "assign_storage",
+          "search_inventory",
+          "issue_inventory",
+          "get_my_acceptance",
+          "confirm_acceptance"
+        ],
+        "routes": [
+          "/storage/tree",
+          "/storage/admin/zones",
+          "/receiving",
+          "/receiving/po/<po_no>",
+          "/receiving/po/<po_no>/items/<int:detail_id>/confirm",
+          "/putaway",
+          "/putaway/assign",
+          "/inventory",
+          "/inventory/issue",
+          "/acceptance/mine",
+          "/acceptance/confirm"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\purchase_orders.py",
+        "lines": 374,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.purchase_order import",
+          "from app.models.request_order import",
+          "from app.models.supplier import",
+          "from app.models.system_settings import",
+          "from app.auth import",
+          "from datetime import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "get_build_candidates",
+          "create_purchase_order",
+          "list_purchase_orders",
+          "get_purchase_order",
+          "update_purchase_order",
+          "confirm_purchase",
+          "withdraw_purchase_order",
+          "update_milestone"
+        ],
+        "routes": [
+          "/build-candidates",
+          "/<po_no>",
+          "/<po_no>",
+          "/<po_no>/confirm",
+          "/<po_no>/withdraw",
+          "/<po_no>/milestone"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\requisitions.py",
+        "lines": 402,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.request_order import",
+          "from app.models.item_category import",
+          "from app.auth import",
+          "from datetime import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_requisitions",
+          "create_requisition",
+          "get_requisition",
+          "update_requisition",
+          "submit_requisition",
+          "approve_line",
+          "question_line",
+          "reject_line",
+          "reject_requisition"
+        ],
+        "routes": [
+          "/<request_order_no>",
+          "/<request_order_no>",
+          "/<request_order_no>/submit",
+          "/<request_order_no>/lines/<int:detail_id>/approve",
+          "/<request_order_no>/lines/<int:detail_id>/question",
+          "/<request_order_no>/lines/<int:detail_id>/reject",
+          "/<request_order_no>/reject"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\suppliers.py",
+        "lines": 191,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.supplier import",
+          "from app.auth import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_suppliers",
+          "create_supplier",
+          "get_supplier",
+          "update_supplier",
+          "get_suppliers_summary"
+        ],
+        "routes": [
+          "/<supplier_id>",
+          "/<supplier_id>",
+          "/summary"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\users.py",
+        "lines": 168,
+        "imports": [
+          "from flask import",
+          "from app import",
+          "from app.models.user import",
+          "from app.auth import"
+        ],
+        "classes": [],
+        "functions": [
+          "list_users",
+          "create_user",
+          "get_user",
+          "update_user",
+          "get_roles"
+        ],
+        "routes": [
+          "/<int:user_id>",
+          "/<int:user_id>",
+          "/roles"
+        ],
+        "models": []
+      },
+      {
+        "file": "D:\\AWORKSPACE\\Github\\project_ERP_dev_agent\\backend\\app\\routes\\__init__.py",
+        "lines": 1,
+        "imports": [],
+        "classes": [],
+        "functions": [],
+        "routes": [],
+        "models": []
+      }
+    ]
+  },
+  "frontend": {
+    "overview": {
+      "total_files": 45,
+      "total_lines": 8709
+    },
+    "components": {},
+    "files": [
+      {
+        "file": "vite.config.js",
+        "lines": 47,
+        "type": ".js"
+      },
+      {
+        "file": "src\\App.vue",
+        "lines": 156,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\ConfirmDialog.vue",
+        "lines": 280,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\DataTable.vue",
+        "lines": 422,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\FormDialog.vue",
+        "lines": 397,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\PageHeader.vue",
+        "lines": 224,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\StatCard.vue",
+        "lines": 265,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\components\\StatusTag.vue",
+        "lines": 158,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\layout\\index.vue",
+        "lines": 346,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\layout\\components\\Breadcrumb.vue",
+        "lines": 77,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\Dashboard.vue",
+        "lines": 610,
+        "type": ".vue",
+        "component_name": "草稿",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\Login.vue",
+        "lines": 278,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\requisitions\\Detail.vue",
+        "lines": 383,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\requisitions\\Form.vue",
+        "lines": 535,
+        "type": ".vue",
+        "component_name": "辦公用品",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\requisitions\\index.vue",
+        "lines": 7,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\requisitions\\List.vue",
+        "lines": 336,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\views\\requisitions\\Review.vue",
+        "lines": 554,
+        "type": ".vue",
+        "has_template": true,
+        "has_script": false,
+        "has_style": false
+      },
+      {
+        "file": "src\\main.ts",
+        "lines": 31,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\accounting.ts",
+        "lines": 96,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\auth.ts",
+        "lines": 32,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\index.ts",
+        "lines": 119,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\inventory.ts",
+        "lines": 93,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\leadtime.ts",
+        "lines": 114,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\procurement.ts",
+        "lines": 105,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\projects.ts",
+        "lines": 58,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\receiving.ts",
+        "lines": 52,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\requisition.ts",
+        "lines": 95,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\storage.ts",
+        "lines": 106,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\suppliers.ts",
+        "lines": 63,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\system.ts",
+        "lines": 31,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\api\\users.ts",
+        "lines": 61,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\components\\index.ts",
+        "lines": 77,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\router\\index.ts",
+        "lines": 227,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\accounting.ts",
+        "lines": 218,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\auth.ts",
+        "lines": 156,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\index.ts",
+        "lines": 32,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\inventory.ts",
+        "lines": 278,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\leadtime.ts",
+        "lines": 243,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\procurement.ts",
+        "lines": 258,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\stores\\requisition.ts",
+        "lines": 261,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\types\\auth.ts",
+        "lines": 34,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\types\\common.ts",
+        "lines": 279,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\types\\index.ts",
+        "lines": 75,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\types\\ui.ts",
+        "lines": 224,
+        "type": ".ts"
+      },
+      {
+        "file": "src\\types\\utils.ts",
+        "lines": 216,
+        "type": ".ts"
+      }
+    ],
+    "package": {
+      "name": "erp-frontend",
+      "version": "1.0.0",
+      "type": "module",
+      "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "eslint src --ext .vue,.js,.jsx,.ts,.tsx --fix",
+        "type-check": "vue-tsc --noEmit"
+      },
+      "dependencies": {
+        "vue": "^3.3.8",
+        "vue-router": "^4.2.5",
+        "pinia": "^2.1.7",
+        "element-plus": "^2.4.2",
+        "@element-plus/icons-vue": "^2.1.0",
+        "axios": "^1.6.0",
+        "@vueuse/core": "^10.5.0",
+        "dayjs": "^1.11.10"
+      },
+      "devDependencies": {
+        "@vitejs/plugin-vue": "^4.4.0",
+        "vite": "^4.5.0",
+        "typescript": "^5.2.2",
+        "vue-tsc": "^1.8.22",
+        "eslint": "^8.53.0",
+        "@vue/eslint-config-typescript": "^12.0.0",
+        "eslint-plugin-vue": "^9.18.1",
+        "unplugin-auto-import": "^0.16.7",
+        "unplugin-vue-components": "^0.25.2",
+        "unplugin-element-plus": "^0.8.0",
+        "@types/node": "^20.8.10"
+      }
+    }
+  },
+  "completeness": {
+    "issues": [
+      "Missing required frontend file: src/main.js"
+    ],
+    "recommendations": [],
+    "completeness_score": 90
+  }
+}

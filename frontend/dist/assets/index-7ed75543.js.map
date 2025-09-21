@@ -1,0 +1,1 @@
+{"version":3,"file":"index-7ed75543.js","sources":["../../src/views/projects/index.vue"],"sourcesContent":["<template>\r\n  <router-view />\r\n</template>\r\n\r\n<script setup lang=\"ts\">\r\n// Projects route container\r\n</script>"],"names":[],"mappings":"wJACiB"}

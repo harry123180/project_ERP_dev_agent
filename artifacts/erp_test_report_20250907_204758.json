@@ -1,0 +1,347 @@
+{
+  "metadata": {
+    "test_execution_time": "2025-09-07T20:47:58.373267",
+    "base_url": "http://localhost:5000",
+    "frontend_url": "http://localhost:5173",
+    "total_tests": 23
+  },
+  "summary": {
+    "total_tests": 46,
+    "passed": 42,
+    "failed": 4,
+    "success_rate": 91.30434782608695,
+    "execution_time": 47.04,
+    "backend_connectivity": true,
+    "frontend_accessibility": false,
+    "authentication_valid": true,
+    "authentication_security": true,
+    "protected_endpoints": true,
+    "sql_injection_resistance": true,
+    "unauthorized_access_protection": true,
+    "error_handling": false
+  },
+  "detailed_results": [
+    {
+      "test_name": "Backend Connectivity",
+      "success": true,
+      "message": "Status: 200, Response: {\"message\":\"ERP System API is running\",\"status\":\"healthy\"}\n",
+      "timestamp": "2025-09-07T20:47:13.681658",
+      "data": null
+    },
+    {
+      "test_name": "Frontend Accessibility",
+      "success": false,
+      "message": "Status: 200, Contains ERP title: False",
+      "timestamp": "2025-09-07T20:47:15.713656",
+      "data": null
+    },
+    {
+      "test_name": "Valid Authentication",
+      "success": true,
+      "message": "Login successful, token received: eyJ0eXAiOiJKV1QiLCJh...",
+      "timestamp": "2025-09-07T20:47:17.808316",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 1",
+      "success": true,
+      "message": "Expected failure, got status: 401 for Invalid password",
+      "timestamp": "2025-09-07T20:47:19.903331",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 2",
+      "success": true,
+      "message": "Expected failure, got status: 401 for Invalid username",
+      "timestamp": "2025-09-07T20:47:21.936691",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 3",
+      "success": true,
+      "message": "Expected failure, got status: 400 for Missing username",
+      "timestamp": "2025-09-07T20:47:23.959865",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 4",
+      "success": true,
+      "message": "Expected failure, got status: 400 for Missing password",
+      "timestamp": "2025-09-07T20:47:25.979615",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: User Profile",
+      "success": true,
+      "message": "Status: 200, Data length: 215",
+      "timestamp": "2025-09-07T20:47:28.012387",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Users List",
+      "success": true,
+      "message": "Status: 200, Data length: 748",
+      "timestamp": "2025-09-07T20:47:30.036576",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Suppliers List",
+      "success": true,
+      "message": "Status: 200, Data length: 986",
+      "timestamp": "2025-09-07T20:47:32.058223",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Inventory List",
+      "success": true,
+      "message": "Status: 200, Data length: 3",
+      "timestamp": "2025-09-07T20:47:34.093633",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Purchase Orders",
+      "success": true,
+      "message": "Status: 200, Data length: 72",
+      "timestamp": "2025-09-07T20:47:36.130322",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: ' OR '1'='1..., Status: 200",
+      "timestamp": "2025-09-07T20:47:38.165498",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: '; DROP TABLE users;..., Status: 200",
+      "timestamp": "2025-09-07T20:47:40.190557",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: 1' UNION SELECT * FR..., Status: 200",
+      "timestamp": "2025-09-07T20:47:42.221608",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: admin'--..., Status: 200",
+      "timestamp": "2025-09-07T20:47:44.236304",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: ' OR 1=1 #..., Status: 200",
+      "timestamp": "2025-09-07T20:47:46.251086",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/users",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:47:48.270297",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/suppliers",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:47:50.282804",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/inventory",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:47:52.315927",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/requisitions",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:47:54.336125",
+      "data": null
+    },
+    {
+      "test_name": "Error Handling: Non-existent endpoint",
+      "success": true,
+      "message": "Expected 404, got: 404",
+      "timestamp": "2025-09-07T20:47:56.355603",
+      "data": null
+    },
+    {
+      "test_name": "Error Handling: Non-existent user ID",
+      "success": false,
+      "message": "Expected 404, got: 500",
+      "timestamp": "2025-09-07T20:47:58.373267",
+      "data": null
+    },
+    {
+      "test_name": "Backend Connectivity",
+      "success": true,
+      "message": "Status: 200, Response: {\"message\":\"ERP System API is running\",\"status\":\"healthy\"}\n",
+      "timestamp": "2025-09-07T20:48:00.413711",
+      "data": null
+    },
+    {
+      "test_name": "Frontend Accessibility",
+      "success": false,
+      "message": "Status: 200, Contains ERP title: False",
+      "timestamp": "2025-09-07T20:48:02.455606",
+      "data": null
+    },
+    {
+      "test_name": "Valid Authentication",
+      "success": true,
+      "message": "Login successful, token received: eyJ0eXAiOiJKV1QiLCJh...",
+      "timestamp": "2025-09-07T20:48:04.605107",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 1",
+      "success": true,
+      "message": "Expected failure, got status: 401 for Invalid password",
+      "timestamp": "2025-09-07T20:48:06.734466",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 2",
+      "success": true,
+      "message": "Expected failure, got status: 401 for Invalid username",
+      "timestamp": "2025-09-07T20:48:08.758994",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 3",
+      "success": true,
+      "message": "Expected failure, got status: 400 for Missing username",
+      "timestamp": "2025-09-07T20:48:10.794388",
+      "data": null
+    },
+    {
+      "test_name": "Invalid Auth Test 4",
+      "success": true,
+      "message": "Expected failure, got status: 400 for Missing password",
+      "timestamp": "2025-09-07T20:48:12.842378",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: User Profile",
+      "success": true,
+      "message": "Status: 200, Data length: 215",
+      "timestamp": "2025-09-07T20:48:14.883943",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Users List",
+      "success": true,
+      "message": "Status: 200, Data length: 748",
+      "timestamp": "2025-09-07T20:48:16.933952",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Suppliers List",
+      "success": true,
+      "message": "Status: 200, Data length: 986",
+      "timestamp": "2025-09-07T20:48:18.962226",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Inventory List",
+      "success": true,
+      "message": "Status: 200, Data length: 3",
+      "timestamp": "2025-09-07T20:48:20.990815",
+      "data": null
+    },
+    {
+      "test_name": "Protected Endpoint: Purchase Orders",
+      "success": true,
+      "message": "Status: 200, Data length: 72",
+      "timestamp": "2025-09-07T20:48:23.033301",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: ' OR '1'='1..., Status: 200",
+      "timestamp": "2025-09-07T20:48:25.076716",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: '; DROP TABLE users;..., Status: 200",
+      "timestamp": "2025-09-07T20:48:27.101327",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: 1' UNION SELECT * FR..., Status: 200",
+      "timestamp": "2025-09-07T20:48:29.157003",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: admin'--..., Status: 200",
+      "timestamp": "2025-09-07T20:48:31.184131",
+      "data": null
+    },
+    {
+      "test_name": "SQL Injection Test",
+      "success": true,
+      "message": "Payload: ' OR 1=1 #..., Status: 200",
+      "timestamp": "2025-09-07T20:48:33.207711",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/users",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:48:35.242754",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/suppliers",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:48:37.277814",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/inventory",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:48:39.311138",
+      "data": null
+    },
+    {
+      "test_name": "Unauthorized Access: /api/v1/requisitions",
+      "success": true,
+      "message": "Expected 401, got: 401",
+      "timestamp": "2025-09-07T20:48:41.346575",
+      "data": null
+    },
+    {
+      "test_name": "Error Handling: Non-existent endpoint",
+      "success": true,
+      "message": "Expected 404, got: 404",
+      "timestamp": "2025-09-07T20:48:43.375173",
+      "data": null
+    },
+    {
+      "test_name": "Error Handling: Non-existent user ID",
+      "success": false,
+      "message": "Expected 404, got: 500",
+      "timestamp": "2025-09-07T20:48:45.413523",
+      "data": null
+    }
+  ]
+}

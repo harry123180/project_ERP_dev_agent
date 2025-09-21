@@ -1,0 +1,150 @@
+{
+  "imports": {
+    "passed": [
+      "config"
+    ],
+    "failed": [
+      {
+        "module": "app",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "app.models",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "app.routes",
+        "error": "No module named 'flask_sqlalchemy'"
+      }
+    ]
+  },
+  "models": {
+    "passed": [],
+    "failed": [
+      {
+        "module": "user",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "supplier",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "item_category",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "request_order",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "purchase_order",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "storage",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "logistics",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "consolidation",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "project",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "system_settings",
+        "error": "No module named 'flask_sqlalchemy'"
+      }
+    ]
+  },
+  "routes": {
+    "passed": [],
+    "failed": [
+      {
+        "module": "auth",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "users",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "suppliers",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "requisitions",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "purchase_orders",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "inventory",
+        "error": "No module named 'flask_sqlalchemy'"
+      },
+      {
+        "module": "accounting",
+        "error": "No module named 'flask_sqlalchemy'"
+      }
+    ]
+  },
+  "configuration": {
+    "config_classes": [
+      "DevelopmentConfig",
+      "ProductionConfig",
+      "TestingConfig"
+    ],
+    "development_config": {
+      "DEBUG": true,
+      "SQLALCHEMY_ECHO": true,
+      "JWT_ACCESS_TOKEN_EXPIRES": "1:00:00"
+    },
+    "production_config": {
+      "DEBUG": false,
+      "SQLALCHEMY_ECHO": false
+    }
+  },
+  "models_analysis": [
+    {
+      "error": "Failed to import base models: No module named 'flask_sqlalchemy'"
+    }
+  ],
+  "routes_analysis": [
+    {
+      "name": "auth",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "users",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "suppliers",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "requisitions",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "purchase_orders",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "inventory",
+      "error": "No module named 'flask_sqlalchemy'"
+    },
+    {
+      "name": "accounting",
+      "error": "No module named 'flask_sqlalchemy'"
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+// Global styles for ERP system
+
+// CSS Reset and normalize
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #303133;
+  background-color: #f5f7fa;
+}
+
+// Layout
+.app-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.page-container {
+  padding: 20px;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+// Common classes
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-center { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+.flex-between { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+}
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+
+// Spacing utilities
+.m-0 { margin: 0; }
+.mt-0 { margin-top: 0; }
+.mr-0 { margin-right: 0; }
+.mb-0 { margin-bottom: 0; }
+.ml-0 { margin-left: 0; }
+
+.p-0 { padding: 0; }
+.pt-0 { padding-top: 0; }
+.pr-0 { padding-right: 0; }
+.pb-0 { padding-bottom: 0; }
+.pl-0 { padding-left: 0; }
+
+@for $i from 1 through 8 {
+  .m-#{$i} { margin: #{$i * 4}px; }
+  .mt-#{$i} { margin-top: #{$i * 4}px; }
+  .mr-#{$i} { margin-right: #{$i * 4}px; }
+  .mb-#{$i} { margin-bottom: #{$i * 4}px; }
+  .ml-#{$i} { margin-left: #{$i * 4}px; }
+  
+  .p-#{$i} { padding: #{$i * 4}px; }
+  .pt-#{$i} { padding-top: #{$i * 4}px; }
+  .pr-#{$i} { padding-right: #{$i * 4}px; }
+  .pb-#{$i} { padding-bottom: #{$i * 4}px; }
+  .pl-#{$i} { padding-left: #{$i * 4}px; }
+}
+
+// Card styles
+.card {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+// Button styles
+.btn-group {
+  display: flex;
+  gap: 8px;
+  
+  .el-button {
+    margin-left: 0;
+  }
+}
+
+// Table styles
+.table-container {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  
+  .el-table {
+    border: none;
+    
+    .el-table__header {
+      background-color: #f8f9fa;
+      
+      th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #303133;
+      }
+    }
+    
+    .el-table__body {
+      tr:hover > td {
+        background-color: #f5f7fa;
+      }
+    }
+  }
+}
+
+// Form styles
+.form-container {
+  background: white;
+  border-radius: 6px;
+  padding: 24px;
+  
+  .el-form {
+    .el-form-item__label {
+      font-weight: 500;
+      color: #606266;
+    }
+  }
+}
+
+// Status colors
+.status-draft { color: #909399; }
+.status-pending { color: #e6a23c; }
+.status-approved { color: #67c23a; }
+.status-rejected { color: #f56c6c; }
+.status-completed { color: #409eff; }
+
+// Money formatting
+.money {
+  font-family: Monaco, 'Courier New', monospace;
+  font-weight: 500;
+  color: #409eff;
+}
+
+.money-positive {
+  color: #67c23a;
+}
+
+.money-negative {
+  color: #f56c6c;
+}
+
+// Loading states
+.loading-overlay {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+}
+
+// Responsive utilities
+.hidden-xs {
+  @media (max-width: 575px) {
+    display: none !important;
+  }
+}
+
+.hidden-sm {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hidden-md {
+  @media (max-width: 991px) {
+    display: none !important;
+  }
+}
+
+.hidden-lg {
+  @media (max-width: 1199px) {
+    display: none !important;
+  }
+}
+
+// Print styles
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-before: always;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .el-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}
+
+// Animation classes
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from {
+  transform: translateX(-100%);
+}
+
+.slide-leave-to {
+  transform: translateX(100%);
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+  
+  &:hover {
+    background: #a8a8a8;
+  }
+}
+
+// Element Plus customizations
+.el-dialog {
+  border-radius: 8px !important;
+  
+  .el-dialog__header {
+    padding: 20px 20px 0;
+    border-bottom: 1px solid #ebeef5;
+  }
+  
+  .el-dialog__body {
+    padding: 20px;
+  }
+}
+
+.el-table {
+  .el-table__cell {
+    padding: 12px 0;
+  }
+  
+  .cell {
+    padding: 0 8px;
+  }
+}
+
+.el-card {
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  
+  .el-card__header {
+    border-bottom: 1px solid #ebeef5;
+    padding: 16px 20px;
+    font-weight: 500;
+  }
+  
+  .el-card__body {
+    padding: 20px;
+  }
+}
+
+.el-form {
+  .el-form-item {
+    margin-bottom: 22px;
+  }
+  
+  .el-form-item__label {
+    line-height: 32px;
+    font-weight: 500;
+  }
+  
+  .el-form-item__error {
+    font-size: 12px;
+    padding-top: 4px;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #e4e7ed;
+  }
+  
+  .card {
+    background-color: #2d2d2d;
+  }
+}

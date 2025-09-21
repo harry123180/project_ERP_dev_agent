@@ -1,800 +1,544 @@
 {
   "schema_version": "1.0",
-  "generated_by": "ERP Frontend Lead",
-  "title": "ERP System Frontend Specifications",
-  "description": "Comprehensive frontend architecture specifications for the Enterprise Resource Planning system covering all 8 modules with Vue.js 3 + Element Plus implementation",
-  
+  "generated_by": "erp-frontend-lead",
+  "title": "ERP Frontend Specification",
+  "description": "Frontend specification for Enterprise Resource Planning system with Vue.js 3",
   "architecture": {
-    "framework": "Vue.js 3 (Composition API)",
+    "framework": "Vue.js 3",
     "ui_library": "Element Plus",
-    "state_management": "Pinia with typed stores",
-    "routing": "Vue Router 4",
-    "http_client": "Axios with interceptors",
+    "state_management": "Pinia",
+    "routing": "Vue Router",
+    "http_client": "Axios",
     "build_tool": "Vite",
-    "styling": "SCSS with Element Plus theming",
-    "patterns": ["MVVM", "Composables", "Component composition"],
+    "styling": "SCSS with Element Plus theme",
+    "patterns": ["Composition API", "MVVM", "Component-based architecture"],
     "design_system": {
-      "colors": {
-        "primary": "#409EFF",
-        "success": "#67C23A", 
-        "warning": "#E6A23C",
-        "danger": "#F56C6C",
-        "info": "#909399"
-      },
-      "spacing": "8px grid system",
-      "typography": "Element Plus default with Chinese support",
-      "breakpoints": {
-        "mobile": "768px",
-        "tablet": "992px", 
-        "desktop": "1200px",
-        "large": "1920px"
-      }
+      "colors": "Element Plus default theme",
+      "typography": "Element Plus typography system",
+      "spacing": "Element Plus spacing tokens"
     }
   },
-
   "state_management": {
     "stores": {
-      "auth": {
-        "purpose": "User authentication and role management",
+      "authStore": {
+        "purpose": "Handle user authentication and role management",
         "state": {
-          "user": "User | null",
-          "token": "string | null", 
-          "roles": "string[]",
-          "permissions": "string[]",
+          "user": "object",
+          "token": "string",
+          "roles": "array",
           "isAuthenticated": "boolean"
         },
-        "actions": [
-          "login(credentials): Promise<void>",
-          "logout(): void",
-          "refreshToken(): Promise<void>",
-          "checkPermission(permission: string): boolean",
-          "hasRole(role: string): boolean"
-        ],
-        "getters": [
-          "currentUser: User | null",
-          "userRoles: string[]",
-          "isAdmin: boolean"
-        ]
+        "actions": ["login", "logout", "refreshToken", "checkRole"],
+        "getters": ["hasRole", "userName", "userPermissions"]
       },
-      "requisition": {
-        "purpose": "Requisition management and workflow",
+      "requisitionStore": {
+        "purpose": "Manage purchase requisitions lifecycle",
         "state": {
-          "requisitions": "Requisition[]",
-          "currentRequisition": "Requisition | null",
-          "draftItems": "RequisitionItem[]",
+          "requisitions": "array",
+          "currentRequisition": "object",
           "loading": "boolean",
-          "pagination": "PaginationState",
-          "filters": "RequisitionFilters"
+          "filters": "object"
         },
-        "actions": [
-          "fetchRequisitions(filters?: RequisitionFilters): Promise<void>",
-          "createRequisition(data: CreateRequisitionData): Promise<Requisition>",
-          "updateRequisition(id: string, data: UpdateRequisitionData): Promise<void>",
-          "submitRequisition(id: string): Promise<void>",
-          "approveItem(reqId: string, itemId: string, data: ApprovalData): Promise<void>",
-          "rejectItem(reqId: string, itemId: string, reason: string): Promise<void>",
-          "questionItem(reqId: string, itemId: string, reason: string): Promise<void>"
-        ]
+        "actions": ["fetchRequisitions", "createRequisition", "submitRequisition", "updateRequisition", "approveItem", "rejectItem"],
+        "getters": ["pendingRequisitions", "myRequisitions", "requisitionById"]
       },
-      "procurement": {
-        "purpose": "Purchase order management and supplier operations",
+      "procurementStore": {
+        "purpose": "Handle procurement order management",
         "state": {
-          "purchaseOrders": "PurchaseOrder[]",
-          "buildCandidates": "RequisitionItem[]",
-          "suppliers": "Supplier[]",
-          "currentPO": "PurchaseOrder | null",
-          "selectedItems": "string[]",
-          "previewData": "POPreviewData | null"
+          "purchaseOrders": "array",
+          "buildCandidates": "object",
+          "currentPO": "object",
+          "loading": "boolean"
         },
-        "actions": [
-          "fetchBuildCandidates(supplierId?: string): Promise<void>",
-          "createPO(data: CreatePOData): Promise<PurchaseOrder>",
-          "updatePO(poNo: string, data: UpdatePOData): Promise<void>",
-          "confirmPurchase(poNo: string, idempotencyKey: string): Promise<void>",
-          "withdrawPO(poNo: string, reason: string): Promise<void>",
-          "reorganizePO(poNo: string, reason: string): Promise<void>"
-        ]
+        "actions": ["fetchBuildCandidates", "createPO", "confirmPurchase", "withdrawPO", "reorganizePO"],
+        "getters": ["poBySupplier", "activePOs", "poById"]
       },
-      "leadtime": {
-        "purpose": "Delivery tracking and milestone management",
+      "leadtimeStore": {
+        "purpose": "Track shipping and delivery timelines",
         "state": {
-          "trackingItems": "TrackingItem[]",
-          "consolidations": "Consolidation[]",
-          "milestones": "Milestone[]",
-          "visibleOnly": "boolean"
+          "shipments": "array",
+          "consolidations": "array",
+          "currentShipment": "object",
+          "loading": "boolean"
         },
-        "actions": [
-          "fetchVisibleTracking(): Promise<void>",
-          "updateMilestone(poNo: string, data: MilestoneData): Promise<void>",
-          "createConsolidation(data: ConsolidationData): Promise<void>",
-          "addPOToConsolidation(consolidationId: string, poNo: string): Promise<void>",
-          "bulkUpdateMilestones(consolidationId: string, data: MilestoneData): Promise<void>"
-        ]
+        "actions": ["fetchShipments", "updateMilestone", "createConsolidation", "updateConsolidation"],
+        "getters": ["activeShipments", "domesticShipments", "internationalShipments"]
       },
-      "receiving": {
-        "purpose": "Goods receiving and confirmation",
+      "inventoryStore": {
+        "purpose": "Manage inventory and storage operations",
         "state": {
-          "receivingList": "ReceivingItem[]",
-          "currentPO": "PurchaseOrder | null",
-          "region": "domestic | international",
-          "suppliers": "Supplier[]"
+          "items": "array",
+          "storageTree": "object",
+          "currentItem": "object",
+          "loading": "boolean"
         },
-        "actions": [
-          "fetchReceivingList(filters: ReceivingFilters): Promise<void>",
-          "fetchPOForReceiving(poNo: string): Promise<void>",
-          "confirmItemReceived(poNo: string, itemId: string): Promise<void>"
-        ]
-      },
-      "inventory": {
-        "purpose": "Inventory management and storage operations", 
-        "state": {
-          "inventoryItems": "InventoryItem[]",
-          "storageTree": "StorageNode[]",
-          "searchFilters": "InventoryFilters",
-          "putawayList": "PutawayItem[]",
-          "acceptanceList": "AcceptanceItem[]"
-        },
-        "actions": [
-          "searchInventory(filters: InventoryFilters): Promise<void>",
-          "fetchStorageTree(): Promise<void>",
-          "assignStorage(data: StorageAssignmentData): Promise<void>",
-          "issueInventory(data: IssueData): Promise<void>",
-          "confirmAcceptance(itemRef: string): Promise<void>",
-          "quickStorageIn(data: QuickInData): Promise<void>"
-        ]
-      },
-      "accounting": {
-        "purpose": "Billing and payment management",
-        "state": {
-          "billingCandidates": "BillingCandidate[]",
-          "billingHistory": "BillingRecord[]",
-          "currentMonth": "string",
-          "selectedSupplier": "string | null",
-          "paymentTerms": "PaymentTerm[]"
-        },
-        "actions": [
-          "fetchBillingCandidates(supplierId: string, month: string): Promise<void>",
-          "generateBilling(data: BillingData): Promise<void>",
-          "markPaidBatch(billingId: string, data: PaymentData): Promise<void>",
-          "markPaidSingle(poNo: string, data: PaymentData): Promise<void>",
-          "fetchBillingHistory(filters: BillingFilters): Promise<void>"
-        ]
+        "actions": ["fetchInventory", "issueItem", "assignStorage", "updateStorage"],
+        "getters": ["itemsByLocation", "availableStock", "itemById"]
       }
     }
   },
-
   "modules": {
+    "authentication": {
+      "name": "Authentication Module",
+      "description": "User login, role-based access control",
+      "routes": [
+        {
+          "path": "/login",
+          "name": "Login",
+          "component": "LoginPage",
+          "roles": ["guest"]
+        },
+        {
+          "path": "/dashboard",
+          "name": "Dashboard",
+          "component": "DashboardPage", 
+          "roles": ["Everyone"]
+        }
+      ],
+      "components": {
+        "LoginPage": {
+          "type": "page",
+          "purpose": "User authentication interface",
+          "template_structure": ["LoginForm", "CompanyLogo", "Footer"],
+          "ui_elements": ["el-form", "el-input", "el-button", "el-card"],
+          "validation_rules": {
+            "username": "required|min:3",
+            "password": "required|min:6"
+          }
+        }
+      }
+    },
     "requisition": {
-      "name": "請購管理",
-      "description": "Requisition creation, approval, and management workflow",
+      "name": "Purchase Requisition Module",
+      "description": "Create and manage purchase requisitions",
       "routes": [
         {
           "path": "/requisitions",
-          "name": "RequisitionList", 
-          "component": "RequisitionList",
-          "roles": ["Everyone"],
-          "meta": { "title": "請購單列表" }
+          "name": "RequisitionList",
+          "component": "RequisitionListPage",
+          "roles": ["Everyone"]
         },
         {
-          "path": "/requisitions/new",
+          "path": "/requisitions/create",
           "name": "CreateRequisition",
-          "component": "CreateRequisition", 
-          "roles": ["Everyone"],
-          "meta": { "title": "建立請購單" }
+          "component": "CreateRequisitionPage",
+          "roles": ["Everyone"]
         },
         {
           "path": "/requisitions/:id",
           "name": "RequisitionDetail",
-          "component": "RequisitionDetail",
-          "roles": ["Everyone"],
-          "meta": { "title": "請購單詳情" }
+          "component": "RequisitionDetailPage",
+          "roles": ["Everyone"]
         },
         {
           "path": "/requisitions/:id/review",
-          "name": "RequisitionReview", 
-          "component": "RequisitionReview",
-          "roles": ["Procurement", "ProcurementMgr"],
-          "meta": { "title": "請購單審核" }
+          "name": "RequisitionReview",
+          "component": "RequisitionReviewPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         }
       ],
       "components": {
-        "RequisitionList": {
+        "RequisitionListPage": {
           "type": "page",
-          "purpose": "Display list of requisitions with filtering and pagination",
-          "template_structure": [
-            "PageHeader with title and create button",
-            "FilterBar with status, date range, and search",
-            "DataTable with columns: req_no, requester, status, created_at, actions",
-            "Pagination component"
-          ],
-          "props": {},
-          "emits": ["create-requisition", "view-detail", "edit-draft"],
-          "composables": ["useRequisitionStore", "usePagination", "usePermissions"],
-          "ui_elements": [
-            "el-card",
-            "el-table", 
-            "el-pagination",
-            "el-button",
-            "el-input",
-            "el-select",
-            "el-date-picker"
-          ]
-        },
-        "CreateRequisition": {
-          "type": "page",
-          "purpose": "Form for creating new requisitions with item management",
-          "template_structure": [
-            "PageHeader with save draft and submit buttons",
-            "RequisitionHeader form (purpose, usage type)",
-            "RequisitionItemsTable with add/remove functionality",
-            "ActionButtons (save draft, submit for review)"
-          ],
-          "props": {},
-          "emits": ["save-draft", "submit-review"],
-          "composables": ["useRequisitionStore", "useFormValidation"],
-          "ui_elements": [
-            "el-form",
-            "el-form-item", 
-            "el-input",
-            "el-select",
-            "el-table",
-            "el-button",
-            "el-input-number"
-          ]
-        },
-        "RequisitionItemsTable": {
-          "type": "component",
-          "purpose": "Editable table for managing requisition items",
-          "template_structure": [
-            "Table header with Add Item button",
-            "Editable rows with item_name, quantity, spec, remarks",
-            "Action column with remove button"
-          ],
-          "props": {
-            "items": "RequisitionItem[]",
-            "readonly": "boolean"
-          },
-          "emits": ["add-item", "remove-item", "update-item"],
-          "validation_rules": {
-            "item_name": "required|string|max:200",
-            "quantity": "required|integer|min:1",
-            "spec": "string|max:500",
-            "remarks": "string|max:1000"
+          "purpose": "Display list of requisitions with filtering",
+          "template_structure": ["FilterBar", "RequisitionTable", "Pagination"],
+          "ui_elements": ["el-table", "el-pagination", "el-select", "el-input", "el-button"],
+          "roles_visibility": {
+            "Everyone": ["my requisitions", "create button"],
+            "Procurement": ["all requisitions", "review actions"],
+            "ProcurementMgr": ["all requisitions", "approve/reject actions"]
           }
         },
-        "RequisitionReview": {
-          "type": "page", 
-          "purpose": "Approval interface for procurement staff",
-          "template_structure": [
-            "RequisitionHeader display (readonly)",
-            "ReviewItemsTable with approval actions",
-            "GlobalActions (approve all, reject all)"
-          ],
+        "CreateRequisitionPage": {
+          "type": "page",
+          "purpose": "Create new purchase requisition",
+          "template_structure": ["RequisitionForm", "ItemsList", "ActionButtons"],
+          "ui_elements": ["el-form", "el-input", "el-select", "el-table", "el-button"],
+          "validation_rules": {
+            "items": "required|array|min:1",
+            "purpose": "required|string",
+            "quantity": "required|integer|min:1"
+          }
+        },
+        "RequisitionReviewPage": {
+          "type": "page",
+          "purpose": "Review and approve requisition items",
+          "template_structure": ["RequisitionHeader", "ItemsReviewTable", "ApprovalActions"],
+          "ui_elements": ["el-card", "el-table", "el-input-number", "el-select", "el-button"],
           "roles_visibility": {
-            "Procurement": ["approve_item", "question_item", "reject_item"],
-            "ProcurementMgr": ["approve_item", "question_item", "reject_item", "reject_order"]
+            "Procurement": ["item review", "supplier assignment"],
+            "ProcurementMgr": ["full approval", "reject entire requisition"]
+          }
+        },
+        "RequisitionReviewDialog": {
+          "type": "dialog",
+          "purpose": "Modal dialog for reviewing procurement requisitions with optimized table display",
+          "dialog_config": {
+            "width": "95vw",
+            "max_width": "1400px",
+            "min_width": "1200px",
+            "top": "5vh",
+            "lock_scroll": true,
+            "destroy_on_close": true,
+            "close_on_click_modal": false,
+            "show_close": true,
+            "custom_class": "requisition-review-dialog"
           },
-          "composables": ["useRequisitionStore", "useAuth"],
-          "ui_elements": [
-            "el-descriptions",
-            "el-table", 
-            "el-button",
-            "el-tag",
-            "el-dialog",
-            "el-input"
-          ]
+          "responsive_design": {
+            "breakpoints": {
+              "xs": "< 768px",
+              "sm": "768px - 992px", 
+              "md": "992px - 1200px",
+              "lg": "1200px - 1600px",
+              "xl": "> 1600px"
+            },
+            "dialog_widths": {
+              "xs": "98vw",
+              "sm": "95vw",
+              "md": "90vw", 
+              "lg": "85vw",
+              "xl": "1400px"
+            },
+            "table_layouts": {
+              "xs": "stacked",
+              "sm": "horizontal_scroll",
+              "md": "horizontal_scroll",
+              "lg": "full_width",
+              "xl": "full_width"
+            }
+          },
+          "table_optimization": {
+            "min_width": "1200px",
+            "fixed_columns": {
+              "left": ["selection", "index"],
+              "right": ["actions"]
+            },
+            "column_widths": {
+              "selection": "55px",
+              "index": "60px",
+              "item_name": "200px",
+              "item_specification": "180px",
+              "item_quantity": "80px",
+              "item_unit": "80px",
+              "item_status": "110px",
+              "supplier": "200px",
+              "unit_price": "150px",
+              "subtotal": "120px",
+              "remarks": "180px",
+              "actions": "180px"
+            },
+            "scrollbar_styling": {
+              "track_color": "#f1f1f1",
+              "thumb_color": "#c1c1c1",
+              "thumb_hover_color": "#a8a8a8",
+              "height": "8px",
+              "border_radius": "4px"
+            },
+            "column_resizing": true,
+            "virtual_scrolling": {
+              "enabled": true,
+              "item_height": 48,
+              "buffer_size": 10
+            }
+          },
+          "mobile_optimizations": {
+            "card_layout": {
+              "enabled": true,
+              "breakpoint": "768px",
+              "card_spacing": "12px",
+              "show_summary_header": true
+            },
+            "touch_interactions": {
+              "swipe_actions": true,
+              "touch_friendly_buttons": {
+                "min_height": "44px",
+                "min_width": "44px",
+                "touch_padding": "8px"
+              }
+            },
+            "simplified_actions": {
+              "primary_actions_only": true,
+              "action_sheet": true
+            }
+          },
+          "ux_enhancements": {
+            "loading_states": {
+              "skeleton_loading": true,
+              "progressive_disclosure": true
+            },
+            "error_handling": {
+              "inline_validation": true,
+              "contextual_help": true,
+              "recovery_suggestions": true
+            },
+            "accessibility": {
+              "keyboard_navigation": true,
+              "screen_reader_support": true,
+              "focus_management": true,
+              "aria_labels": true
+            },
+            "performance": {
+              "lazy_loading": true,
+              "debounced_inputs": true,
+              "optimistic_updates": true
+            }
+          },
+          "workflow_optimization": {
+            "bulk_operations": {
+              "select_all": true,
+              "filter_selection": true,
+              "batch_actions": ["approve", "question", "reject"],
+              "progress_tracking": true
+            },
+            "smart_defaults": {
+              "remember_supplier_selection": true,
+              "price_suggestions": true,
+              "validation_hints": true
+            },
+            "status_management": {
+              "visual_status_indicators": true,
+              "status_filters": true,
+              "status_history": true
+            }
+          }
         }
       }
     },
-
     "procurement": {
-      "name": "採購管理", 
-      "description": "Purchase order creation and management",
+      "name": "Procurement Module",
+      "description": "Create and manage purchase orders",
       "routes": [
         {
           "path": "/procurement/build",
-          "name": "POBuilder",
-          "component": "POBuilder",
-          "roles": ["Procurement", "ProcurementMgr"],
-          "meta": { "title": "製作採購單" }
+          "name": "BuildPO",
+          "component": "BuildPOPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         },
         {
-          "path": "/procurement/orders", 
+          "path": "/procurement/orders",
           "name": "POList",
-          "component": "POList",
-          "roles": ["Procurement", "ProcurementMgr"],
-          "meta": { "title": "採購單列表" }
+          "component": "POListPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         },
         {
           "path": "/procurement/orders/:poNo",
-          "name": "PODetail", 
-          "component": "PODetail",
-          "roles": ["Procurement", "ProcurementMgr"],
-          "meta": { "title": "採購單詳情" }
+          "name": "PODetail",
+          "component": "PODetailPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         }
       ],
       "components": {
-        "POBuilder": {
+        "BuildPOPage": {
           "type": "page",
-          "purpose": "Two-panel interface for building purchase orders",
-          "template_structure": [
-            "SupplierSelector dropdown",
-            "SplitPane layout",
-            "LeftPanel: BuildCandidatesTable",
-            "RightPanel: POPreview with real-time calculations"
-          ],
-          "layout": "two-column-split",
-          "ui_elements": [
-            "el-select",
-            "el-divider", 
-            "el-table",
-            "el-checkbox",
-            "el-descriptions",
-            "el-button"
-          ]
-        },
-        "BuildCandidatesTable": {
-          "type": "component",
-          "purpose": "List of approved requisition items grouped by supplier",
-          "template_structure": [
-            "Table with selection column",
-            "Columns: req_no, item_name, quantity, spec, unit_price",
-            "Add to PO button"
-          ],
-          "props": {
-            "candidates": "RequisitionItem[]",
-            "selected": "string[]"
-          },
-          "emits": ["selection-change", "add-to-po"]
-        },
-        "POPreview": {
-          "type": "component",
-          "purpose": "Real-time preview of purchase order with calculations",
-          "template_structure": [
-            "SupplierInfo display",
-            "POItemsTable",
-            "FinancialSummary (subtotal, tax, grand total)",
-            "Actions (save, confirm)"
-          ],
+          "purpose": "Build purchase orders by supplier grouping",
+          "template_structure": ["SupplierTabs", "ItemsList", "POPreview"],
+          "layout": "split-screen (left: items, right: preview)",
+          "ui_elements": ["el-tabs", "el-table", "el-checkbox", "el-card", "el-button"],
           "calculation_rules": {
-            "line_total": "quantity * unit_price (rounded to integer)",
-            "subtotal": "sum of all line_totals (integer)",
+            "subtotal": "quantity * unit_price (round to integer)",
             "tax": "subtotal * tax_rate (1 decimal place)",
-            "grand_total": "subtotal + tax (rounded to integer)"
+            "total": "subtotal + tax (round to integer)"
+          }
+        },
+        "POListPage": {
+          "type": "page",
+          "purpose": "Display and manage purchase orders",
+          "template_structure": ["FilterBar", "POTable", "BulkActions"],
+          "ui_elements": ["el-table", "el-tag", "el-button", "el-select", "el-pagination"],
+          "roles_visibility": {
+            "Procurement": ["view", "create", "edit draft"],
+            "ProcurementMgr": ["view", "create", "confirm purchase", "withdraw"]
           }
         }
       }
     },
-
     "leadtime": {
-      "name": "交期維護",
-      "description": "Delivery tracking and logistics management",
+      "name": "Lead Time Management Module", 
+      "description": "Track shipping and delivery milestones",
       "routes": [
         {
           "path": "/leadtime",
-          "name": "LeadtimeBoard",
-          "component": "LeadtimeBoard", 
-          "roles": ["Procurement", "ProcurementMgr"],
-          "meta": { "title": "交期維護看板" }
+          "name": "LeadTimeBoard",
+          "component": "LeadTimeBoardPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         },
         {
-          "path": "/leadtime/consolidation",
-          "name": "ConsolidationManagement",
-          "component": "ConsolidationManagement",
-          "roles": ["Procurement", "ProcurementMgr"], 
-          "meta": { "title": "集運倉管理" }
+          "path": "/leadtime/consolidations",
+          "name": "ConsolidationList",
+          "component": "ConsolidationListPage",
+          "roles": ["Procurement", "ProcurementMgr", "Admin"]
         }
       ],
       "components": {
-        "LeadtimeBoard": {
+        "LeadTimeBoardPage": {
           "type": "page",
-          "purpose": "Kanban-style board for tracking delivery milestones",
-          "template_structure": [
-            "FilterBar (domestic/international, supplier)",
-            "StatusColumns layout",
-            "POCards with milestone update forms"
-          ],
-          "layout": "kanban-board",
-          "status_columns": ["已採購", "已發貨", "運輸中", "清關中", "預計到貨"],
-          "ui_elements": [
-            "el-row",
-            "el-col", 
-            "el-card",
-            "el-form",
-            "el-date-picker",
-            "el-input"
-          ]
-        },
-        "MilestoneUpdateForm": {
-          "type": "component",
-          "purpose": "Form for updating delivery milestones",
-          "template_structure": [
-            "Status selection",
-            "Date fields (shipped_at, eta_date, arrival_date)",
-            "Logistics info (carrier, tracking_no)",
-            "Notes textarea"
-          ],
-          "props": {
-            "po": "PurchaseOrder",
-            "milestone": "Milestone"
-          },
-          "validation_rules": {
-            "status": "required|string",
-            "eta_date": "date|after:shipped_at",
-            "tracking_no": "string|max:100"
-          }
+          "purpose": "Kanban-style board for tracking shipment status",
+          "template_structure": ["StatusColumns", "POCards", "MilestoneForm"],
+          "ui_elements": ["el-card", "el-form", "el-select", "el-date-picker", "el-input"],
+          "layout": "kanban board with status columns"
         }
       }
     },
-
     "receiving": {
-      "name": "收貨管理",
-      "description": "Goods receiving and confirmation",
+      "name": "Receiving Module",
+      "description": "Receive and confirm delivered items",
       "routes": [
         {
           "path": "/receiving",
           "name": "ReceivingList",
-          "component": "ReceivingList",
-          "roles": ["Everyone"], 
-          "meta": { "title": "收貨清單" }
+          "component": "ReceivingListPage",
+          "roles": ["Everyone"]
         },
         {
           "path": "/receiving/po/:poNo",
-          "name": "ReceivingCheck", 
-          "component": "ReceivingCheck",
-          "roles": ["Everyone"],
-          "meta": { "title": "收貨檢核" }
+          "name": "ReceivingDetail",
+          "component": "ReceivingDetailPage",
+          "roles": ["Everyone"]
         }
       ],
       "components": {
-        "ReceivingList": {
-          "type": "page", 
-          "purpose": "List of POs ready for receiving",
-          "template_structure": [
-            "RegionTabs (domestic/international)", 
-            "SupplierFilter",
-            "POTable with receiving status",
-            "Quick actions column"
-          ],
-          "ui_elements": [
-            "el-tabs",
-            "el-tab-pane",
-            "el-select", 
-            "el-table",
-            "el-button",
-            "el-tag"
-          ]
-        },
-        "ReceivingCheck": {
+        "ReceivingListPage": {
           "type": "page",
-          "purpose": "Item-by-item receiving confirmation",
-          "template_structure": [
-            "POHeader information",
-            "ReceivingItemsTable",
-            "BatchActions (confirm all, partial receiving)"
-          ],
-          "ui_elements": [
-            "el-descriptions",
-            "el-table",
-            "el-checkbox", 
-            "el-button",
-            "el-input-number"
-          ]
+          "purpose": "List items ready for receiving",
+          "template_structure": ["RegionTabs", "ItemsTable", "FilterBar"],
+          "ui_elements": ["el-tabs", "el-table", "el-button", "el-tag"]
+        },
+        "ReceivingDetailPage": {
+          "type": "page",
+          "purpose": "Confirm receipt of individual items",
+          "template_structure": ["POHeader", "ItemsTable", "ConfirmActions"],
+          "ui_elements": ["el-card", "el-table", "el-button", "el-checkbox"]
         }
       }
     },
-
-    "inventory": {
-      "name": "庫存管理", 
-      "description": "Inventory management, storage, and issuance",
+    "storage": {
+      "name": "Storage Management Module",
+      "description": "Manage storage locations and put-away operations",
       "routes": [
         {
-          "path": "/inventory/search",
-          "name": "InventorySearch",
-          "component": "InventorySearch",
-          "roles": ["Everyone"],
-          "meta": { "title": "庫存查詢" }
+          "path": "/storage/putaway",
+          "name": "PutAwayList", 
+          "component": "PutAwayListPage",
+          "roles": ["Everyone"]
         },
         {
-          "path": "/inventory/putaway",
-          "name": "PutawayManagement", 
-          "component": "PutawayManagement",
-          "roles": ["Everyone"],
-          "meta": { "title": "入庫管理" }
-        },
-        {
-          "path": "/inventory/acceptance",
-          "name": "AcceptanceList",
-          "component": "AcceptanceList",
-          "roles": ["Everyone"], 
-          "meta": { "title": "驗收管理" }
-        },
-        {
-          "path": "/inventory/storage-admin",
-          "name": "StorageAdmin",
-          "component": "StorageAdmin",
-          "roles": ["Everyone"],
-          "meta": { "title": "儲位管理" }
+          "path": "/storage/locations",
+          "name": "StorageLocations",
+          "component": "StorageLocationsPage",
+          "roles": ["Everyone"]
         }
       ],
       "components": {
-        "InventorySearch": {
+        "PutAwayListPage": {
           "type": "page",
-          "purpose": "Multi-criteria inventory search and issuance",
-          "template_structure": [
-            "SearchForm with multiple filters",
-            "InventoryTable grouped by location", 
-            "IssueModal for inventory issuance"
-          ],
-          "search_filters": [
-            "item_name (fuzzy)",
-            "spec (fuzzy)",
-            "request_no",
-            "po_no",
-            "usage_type",
-            "storage_location"
-          ],
-          "ui_elements": [
-            "el-form",
-            "el-input",
-            "el-select",
-            "el-table",
-            "el-dialog",
-            "el-input-number"
-          ]
-        },
-        "StorageLocationPicker": {
-          "type": "component",
-          "purpose": "Hierarchical storage location selector",
-          "template_structure": [
-            "Zone dropdown",
-            "Shelf dropdown (filtered by zone)",
-            "Floor dropdown (filtered by shelf)", 
-            "Position selector (Front/Back, L/M/R)"
-          ],
-          "props": {
-            "storageTree": "StorageNode[]",
-            "modelValue": "string"
-          },
-          "emits": ["update:modelValue"],
-          "storage_format": "Zone-Shelf-Floor-FrontBack-LMR"
+          "purpose": "Assign storage locations to received items",
+          "template_structure": ["ItemsList", "LocationSelector", "AssignActions"],
+          "ui_elements": ["el-table", "el-cascader", "el-button", "el-form"]
         }
       }
     },
-
+    "inventory": {
+      "name": "Inventory Module",
+      "description": "Query inventory and issue items",
+      "routes": [
+        {
+          "path": "/inventory",
+          "name": "InventoryQuery",
+          "component": "InventoryQueryPage",
+          "roles": ["Everyone"]
+        }
+      ],
+      "components": {
+        "InventoryQueryPage": {
+          "type": "page",
+          "purpose": "Search and issue inventory items",
+          "template_structure": ["SearchFilters", "InventoryTable", "IssueModal"],
+          "ui_elements": ["el-form", "el-table", "el-dialog", "el-input-number", "el-button"]
+        }
+      }
+    },
     "accounting": {
-      "name": "會計管理",
-      "description": "Billing and payment processing",
+      "name": "Accounting Module",
+      "description": "Generate billing and manage payments",
       "routes": [
         {
           "path": "/accounting/billing",
-          "name": "BillingManagement", 
-          "component": "BillingManagement",
-          "roles": ["ProcurementMgr", "Accountant"],
-          "meta": { "title": "請款管理" }
+          "name": "BillingPage",
+          "component": "BillingPage",
+          "roles": ["ProcurementMgr", "Accountant", "Admin"]
         },
         {
           "path": "/accounting/history",
-          "name": "PaymentHistory",
-          "component": "PaymentHistory", 
-          "roles": ["ProcurementMgr", "Accountant"],
-          "meta": { "title": "付款紀錄" }
+          "name": "PaymentHistory", 
+          "component": "PaymentHistoryPage",
+          "roles": ["ProcurementMgr", "Accountant", "Admin"]
         }
       ],
       "components": {
-        "BillingManagement": {
+        "BillingPage": {
           "type": "page",
-          "purpose": "Generate billing batches based on payment terms",
-          "template_structure": [
-            "BillingFilters (supplier, month, term)",
-            "CandidatesTable (unpaid POs)",
-            "BillingSummary with calculations",
-            "GenerateBillingForm"
-          ],
-          "business_rules": {
-            "payment_terms": ["30天", "60天"],
-            "cutoff_date": "25th of month",
-            "month_assignment": "1-25 current month, 26-31 next month"
-          },
-          "ui_elements": [
-            "el-select",
-            "el-date-picker",
-            "el-table", 
-            "el-form",
-            "el-input-number",
-            "el-button"
-          ]
+          "purpose": "Generate billing batches for suppliers",
+          "template_structure": ["SupplierSelector", "CandidatesTable", "BillingForm"],
+          "ui_elements": ["el-select", "el-table", "el-form", "el-button", "el-input-number"]
         }
       }
     }
   },
-
   "permissions": {
     "roles": {
-      "Everyone": {
-        "description": "Any authenticated user",
-        "pages": [
-          "requisitions (own only)",
-          "receiving",
-          "inventory (search, putaway, acceptance)",
-          "storage-admin"
-        ],
-        "actions": [
-          "create_requisition",
-          "view_own_requisitions", 
-          "confirm_receiving",
-          "assign_storage",
-          "issue_inventory",
-          "confirm_acceptance"
-        ]
-      },
-      "Procurement": {
-        "description": "Procurement staff",
-        "inherits": "Everyone",
-        "pages": [
-          "requisitions (all)",
-          "requisition_review",
-          "procurement",
-          "leadtime"
-        ],
-        "actions": [
-          "view_all_requisitions",
-          "approve_requisition_item",
-          "question_requisition_item", 
-          "reject_requisition_item",
-          "create_purchase_order",
-          "update_milestone"
-        ]
+      "Admin": {
+        "description": "System administrator with full access",
+        "pages": ["all"],
+        "actions": ["all"]
       },
       "ProcurementMgr": {
-        "description": "Procurement manager",
-        "inherits": "Procurement", 
-        "pages": [
-          "accounting (billing)"
-        ],
-        "actions": [
-          "reject_requisition_order",
-          "confirm_purchase_order",
-          "withdraw_purchase_order",
-          "generate_billing",
-          "mark_paid"
-        ]
+        "description": "Procurement manager with approval authority",
+        "pages": ["requisitions", "procurement", "leadtime", "accounting"],
+        "actions": ["approve_requisition", "confirm_purchase", "generate_billing", "mark_paid"]
+      },
+      "Procurement": {
+        "description": "Procurement officer handling daily operations", 
+        "pages": ["requisitions", "procurement", "leadtime"],
+        "actions": ["review_requisition", "create_po", "update_milestone"]
       },
       "Accountant": {
-        "description": "Accounting staff",
-        "inherits": "Everyone",
-        "pages": [
-          "accounting"
-        ],
-        "actions": [
-          "generate_billing",
-          "mark_paid", 
-          "view_payment_history"
-        ]
+        "description": "Accounting staff managing payments",
+        "pages": ["accounting"],
+        "actions": ["generate_billing", "mark_paid", "view_payment_history"]
+      },
+      "Everyone": {
+        "description": "All authenticated users basic access",
+        "pages": ["dashboard", "requisitions", "receiving", "storage", "inventory"],
+        "actions": ["create_requisition", "confirm_receiving", "assign_storage", "issue_items"]
       }
     }
   },
-
   "api_integration": {
     "base_url": "/api/v1",
-    "patterns": {
-      "query_operations": "GET requests for data fetching",
-      "command_operations": "POST/PUT/DELETE for state changes",
-      "idempotency": "Support Idempotency-Key header for critical operations",
-      "error_handling": "Consistent error format with proper HTTP status codes"
-    },
-    "interceptors": {
-      "request": [
-        "Add JWT token to Authorization header",
-        "Add Idempotency-Key for state-changing operations",
-        "Set Content-Type to application/json"
-      ],
-      "response": [
-        "Handle 401 unauthorized (redirect to login)",
-        "Handle 403 forbidden (show access denied)",
-        "Handle 422 validation errors (show field errors)",
-        "Handle 409 conflicts (show business rule violations)"
-      ]
-    }
+    "authentication": "JWT Bearer token in Authorization header",
+    "error_handling": "Centralized error interceptor with user-friendly messages",
+    "loading_states": "Global loading overlay and component-level loading indicators"
   },
-
   "form_validation": {
-    "global_rules": {
-      "required_fields": "Cannot be empty",
-      "positive_integers": "Must be positive integer",
-      "positive_numbers": "Must be positive number", 
-      "email_format": "Must be valid email format",
-      "date_format": "Must be valid date",
-      "max_length": "Cannot exceed {max} characters"
-    },
-    "business_rules": {
-      "requisition": {
-        "quantity": "positive integer, min: 1",
-        "item_name": "required, max: 200 chars",
-        "spec": "max: 500 chars",
-        "remarks": "max: 1000 chars"
-      },
-      "purchase_order": {
-        "unit_price": "positive number, up to 6 decimal places",
-        "line_total": "calculated as quantity * unit_price, rounded to integer",
-        "tax_rate": "percentage, 1 decimal place",
-        "grand_total": "calculated total, integer"
-      },
-      "storage": {
-        "location_code": "format: Zone-Shelf-Floor-FrontBack-LMR",
-        "quantity": "positive integer"
-      }
+    "library": "Element Plus built-in validation",
+    "patterns": {
+      "required_field": "Field is required",
+      "positive_integer": "Must be a positive integer", 
+      "positive_number": "Must be a positive number",
+      "email_format": "Must be valid email format"
     }
   },
-
   "responsive_design": {
     "breakpoints": {
       "mobile": "< 768px",
-      "tablet": "768px - 992px",
-      "desktop": "992px - 1200px", 
-      "large": "> 1200px"
+      "tablet": "768px - 1024px", 
+      "desktop": "> 1024px"
     },
-    "adaptations": {
-      "mobile": {
-        "navigation": "Collapsible sidebar menu",
-        "tables": "Horizontal scroll with fixed columns",
-        "forms": "Single column layout",
-        "actions": "Bottom fixed action bar"
-      },
-      "tablet": {
-        "navigation": "Icon-only sidebar",
-        "tables": "Responsive columns with priority hiding",
-        "forms": "Two column layout where appropriate"
-      },
-      "desktop": {
-        "navigation": "Full sidebar with labels",
-        "tables": "Full table layout",
-        "forms": "Multi-column forms with proper spacing"
-      }
-    },
-    "touch_optimization": {
-      "button_size": "min 44px touch target",
-      "spacing": "adequate spacing between interactive elements",
-      "gestures": "swipe navigation where appropriate"
-    }
+    "approach": "Mobile-first responsive design with Element Plus grid system"
   },
-
   "testing_strategy": {
-    "unit_tests": {
-      "composables": "Test store actions and state mutations",
-      "components": "Test component behavior and emitted events",
-      "utils": "Test utility functions and calculations"
-    },
-    "integration_tests": {
-      "workflows": "Test complete user workflows end-to-end",
-      "api_integration": "Test API calls and error handling",
-      "routing": "Test route guards and navigation"
-    },
-    "acceptance_criteria": {
-      "requisition_creation": [
-        "User can create requisition with multiple items",
-        "Form validation prevents invalid submissions",
-        "Draft saving works correctly",
-        "Submission updates status to 'submitted'"
-      ],
-      "approval_workflow": [
-        "Procurement staff can see all pending requisitions",
-        "Item-level approval/rejection works",
-        "Status updates reflect in real-time",
-        "Only authorized roles can perform approvals"
-      ],
-      "purchase_order_creation": [
-        "Items are grouped by supplier correctly",
-        "Financial calculations are accurate",
-        "PO generation includes all required information",
-        "Status tracking works throughout lifecycle"
-      ],
-      "inventory_management": [
-        "Search functionality works with all filters",
-        "Storage location assignment is validated",
-        "Inventory issuance prevents negative stock",
-        "Acceptance workflow tracks requester actions"
-      ]
-    }
+    "unit_tests": "Vue Test Utils + Vitest for component testing",
+    "integration_tests": "Cypress for E2E user workflows",
+    "coverage_target": "80% code coverage minimum"
   }
 }
