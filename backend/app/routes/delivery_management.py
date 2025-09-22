@@ -407,7 +407,7 @@ def update_po_status(po_number):
                 remarks = :remarks,
                 expected_delivery_date = :expected_date,
                 actual_delivery_date = :actual_date,
-                status_update_required = 0,
+                status_update_required = false,
                 updated_at = :updated_at
             WHERE purchase_order_no = :po_number
         """)
@@ -489,7 +489,7 @@ def update_delivery_status():
                 remarks = :remarks,
                 expected_delivery_date = :expected_date,
                 actual_delivery_date = :actual_date,
-                status_update_required = 0,
+                status_update_required = false,
                 updated_at = :updated_at
             WHERE purchase_order_no = :po_no
         """)
