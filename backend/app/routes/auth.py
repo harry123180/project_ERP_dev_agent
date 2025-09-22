@@ -80,12 +80,12 @@ def login():
                 status_code=401
             )
         
-        # Create JWT tokens
+        # Create JWT tokens (identity must be string)
         access_token = create_access_token(
-            identity=user.user_id,
+            identity=str(user.user_id),
             additional_claims={'role': user.role, 'username': user.username}
         )
-        refresh_token = create_refresh_token(identity=user.user_id)
+        refresh_token = create_refresh_token(identity=str(user.user_id))
         
         return jsonify({
             'access_token': access_token,
@@ -108,18 +108,19 @@ def refresh():
     """Refresh JWT token"""
     try:
         current_user_id = get_jwt_identity()
-        user = User.query.get(current_user_id)
-        
+        # Convert string back to int for database query
+        user = User.query.get(int(current_user_id))
+
         if not user or not user.is_active:
             return create_error_response(
                 'INVALID_USER',
                 'User not found or inactive',
                 status_code=401
             )
-        
-        # Create new access token
+
+        # Create new access token (identity must be string)
         access_token = create_access_token(
-            identity=user.user_id,
+            identity=str(user.user_id),
             additional_claims={'role': user.role, 'username': user.username}
         )
         
