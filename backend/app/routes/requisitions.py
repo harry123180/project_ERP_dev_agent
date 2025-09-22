@@ -373,10 +373,21 @@ def create_requisition(current_user):
         
     except Exception as e:
         db.session.rollback()
+        # Detailed error logging for debugging
+        import traceback
+        error_details = {
+            'error': str(e),
+            'type': type(e).__name__,
+            'traceback': traceback.format_exc(),
+            'data_received': data if 'data' in locals() else 'data not available',
+            'user_id': current_user.user_id if current_user else 'no user'
+        }
+        print(f"[REQUISITION_CREATE_ERROR] DETAILED ERROR: {error_details}")
+
         return create_error_response(
             'REQUISITION_CREATE_ERROR',
             'Failed to create requisition',
-            {'error': str(e)},
+            error_details,
             status_code=500
         )
 
