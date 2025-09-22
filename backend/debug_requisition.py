@@ -7,6 +7,13 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Force PostgreSQL connection
+database_url = os.getenv('DATABASE_URL', 'postgresql://postgres:64946849@localhost:5432/erp_production')
+os.environ['DATABASE_URL'] = database_url
+os.environ['FLASK_ENV'] = 'production'
+
+print(f"[DB] Connecting to: {database_url}")
+
 try:
     from app import create_app, db
     from app.models.request_order import RequestOrder
