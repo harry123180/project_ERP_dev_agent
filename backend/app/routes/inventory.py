@@ -287,14 +287,32 @@ def confirm_item_received_new(current_user):
                 status_code=404
             )
         
-        # Skip creating receiving record due to database schema mismatch
-        # But we still need to create a pending storage item for the inventory workflow
+        # Create receiving record first to maintain proper foreign key relationship
+        from app.models.receiving import ReceivingRecord, PendingStorageItem
 
-        # Create a simplified pending storage item directly
-        from app.models.receiving import PendingStorageItem
+        # Create the receiving record
+        receiving_record = ReceivingRecord(
+            purchase_order_no=data['purchase_order_number'],
+            po_item_detail_id=data['item_id'],
+            requisition_number=data['requisition_number'],
+            consolidation_number=data.get('consolidation_number'),
+            item_name=data.get('item_name', po_item.item_name),
+            item_specification=po_item.item_specification,
+            quantity_shipped=data.get('quantity', po_item.item_quantity),
+            quantity_received=data.get('quantity', po_item.item_quantity),
+            unit=data.get('unit', po_item.item_unit),
+            receiver_id=current_user.user_id,
+            receiver_name=receiver_name,
+            received_at=received_at,
+            notes=notes,
+            receiving_status='received_pending_storage'
+        )
+        db.session.add(receiving_record)
+        db.session.flush()  # Get the receiving_id
 
+        # Create pending storage item with proper foreign key reference
         pending_item = PendingStorageItem(
-            receiving_record_id=0,  # No receiving record, use 0 as placeholder
+            receiving_record_id=receiving_record.receiving_id,
             item_name=data.get('item_name', po_item.item_name),
             item_specification=po_item.item_specification,
             quantity=data.get('quantity', po_item.item_quantity),
