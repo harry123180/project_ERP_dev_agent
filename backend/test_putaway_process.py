@@ -75,9 +75,7 @@ try:
             batch_storage = InventoryBatchStorage(
                 batch_id=batch.batch_id,
                 storage_id=storage.storage_id,
-                quantity=float(pending_item.quantity),
-                is_primary=True,
-                allocated_at=datetime.utcnow()
+                quantity=float(pending_item.quantity)
             )
             db.session.add(batch_storage)
             db.session.flush()

@@ -709,9 +709,7 @@ def assign_storage_location(current_user):
             batch_storage = InventoryBatchStorage(
                 batch_id=inventory_batch.batch_id,
                 storage_id=storage.storage_id,
-                quantity=float(pending_item.quantity),
-                is_primary=True,
-                allocated_at=datetime.utcnow()
+                quantity=float(pending_item.quantity)
             )
             db.session.add(batch_storage)
 
