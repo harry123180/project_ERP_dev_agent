@@ -17,11 +17,20 @@ login_data = {
 
 print("1. Logging in...")
 login_response = requests.post(login_url, json=login_data)
+print(f"   Login response status: {login_response.status_code}")
 if login_response.status_code != 200:
-    print(f"Login failed: {login_response.text}")
+    print(f"   Login failed: {login_response.text}")
     exit(1)
 
-token = login_response.json()['data']['access_token']
+response_json = login_response.json()
+if 'data' in response_json:
+    token = response_json['data']['access_token']
+else:
+    # Handle different response structure
+    token = response_json.get('access_token', response_json.get('token', None))
+    if not token:
+        print(f"   Unexpected response structure: {json.dumps(response_json, indent=2)}")
+        exit(1)
 headers = {
     "Authorization": f"Bearer {token}",
     "Content-Type": "application/json"
