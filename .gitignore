@@ -98,3 +98,7 @@ nul
 frontend_debug_test.html
 *.bat
 cleanup_*.sh
+
+# Database fixtures - include for version control
+!database/fixtures/
+!database/fixtures/*.json

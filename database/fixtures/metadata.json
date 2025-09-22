@@ -1,0 +1,10 @@
+{
+  "exported_at": "2025-09-23T01:11:07.237211",
+  "database_url": "unknown",
+  "tables": {
+    "users": 19,
+    "suppliers": 17,
+    "categories": 0,
+    "system_settings": 0
+  }
+}
