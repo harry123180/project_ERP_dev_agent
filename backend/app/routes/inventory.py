@@ -305,7 +305,7 @@ def confirm_item_received_new(current_user):
             receiver_name=receiver_name,
             received_at=received_at,
             notes=notes,
-            receiving_status='received_pending_storage'
+            receiving_status='received'
         )
         db.session.add(receiving_record)
         db.session.flush()  # Get the receiving_id
