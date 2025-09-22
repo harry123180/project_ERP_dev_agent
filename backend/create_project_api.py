@@ -12,7 +12,7 @@ project_url = f"{base_url}/api/v1/projects"
 # Login first to get token
 login_data = {
     "username": "harry123180",
-    "password": "changeme123"
+    "password": "password123"  # Correct password from init_postgres_db.py
 }
 
 print("1. Logging in...")
