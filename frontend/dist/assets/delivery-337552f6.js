@@ -1,2 +1,0 @@
-import{a3 as e}from"./index-61294aba.js";const o=async s=>(await e.get("/delivery/maintenance-list",{params:s})).data,r=async()=>(await e.get("/delivery/consolidation-list")).data,i=async(s,t)=>(await e.put(`/delivery/orders/${s}/status`,t)).data,c=async(s,t)=>(await e.put(`/delivery/orders/${s}/remarks`,t)).data,d=async s=>(await e.post("/delivery/consolidations",s)).data,p=async(s,t)=>(await e.put(`/delivery/consolidations/${s}/status`,t)).data;export{r as a,c as b,d as c,p as d,o as g,i as u};
-//# sourceMappingURL=delivery-337552f6.js.map
