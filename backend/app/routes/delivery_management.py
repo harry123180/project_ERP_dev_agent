@@ -656,19 +656,16 @@ def create_consolidation():
             link_query = text("""
                 INSERT INTO consolidation_pos (
                     consolidation_id,
-                    purchase_order_no,
-                    created_at
+                    purchase_order_no
                 ) VALUES (
                     :consolidation_id,
-                    :purchase_order_no,
-                    :created_at
+                    :purchase_order_no
                 )
             """)
 
             db.session.execute(link_query, {
                 'consolidation_id': consolidation_id,
-                'purchase_order_no': po_no,
-                'created_at': current_time
+                'purchase_order_no': po_no
             })
 
             # Update purchase order with consolidation_id
