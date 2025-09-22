@@ -11,8 +11,7 @@ load_dotenv()
 os.environ['DATABASE_URL'] = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/erp_production')
 os.environ['FLASK_ENV'] = 'production'
 
-from app import create_app
-from app.extensions import db
+from app import create_app, db
 from app.models import User
 
 app = create_app('production')
