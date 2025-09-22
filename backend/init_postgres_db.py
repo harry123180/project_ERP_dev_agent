@@ -12,7 +12,8 @@ os.environ['DATABASE_URL'] = os.getenv('DATABASE_URL', 'postgresql://postgres:po
 os.environ['FLASK_ENV'] = 'production'
 
 from app import create_app
-from app.models import db, User
+from app.extensions import db
+from app.models import User
 
 app = create_app('production')
 
