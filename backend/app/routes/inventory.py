@@ -266,7 +266,7 @@ def confirm_item_received_new(current_user):
                 )
         
         # Get additional data
-        receiver_name = data.get('receiver', current_user.chinese_name)
+        receiver_name = data.get('receiver') or current_user.chinese_name or current_user.username
         received_at = data.get('received_at')
         if received_at:
             received_at = datetime.fromisoformat(received_at.replace('Z', '+00:00'))
