@@ -636,7 +636,7 @@ def create_consolidation():
         db.session.execute(insert_query, {
             'consolidation_id': consolidation_id,
             'consolidation_name': data['consolidation_name'],
-            'logistics_status': 'consolidating',  # Changed from 'pending' for PostgreSQL ENUM
+            'logistics_status': 'in_transit',  # Use 'in_transit' which is likely a valid ENUM value
             'expected_delivery_date': data.get('expected_delivery_date'),
             'total_weight': data.get('total_weight', 0),
             'total_volume': data.get('total_volume', 0),
