@@ -561,7 +561,7 @@ def update_delivery_status():
         }), 500
 
 
-@delivery_bp.route('/create-consolidation', methods=['POST'])
+@delivery_bp.route('/consolidations', methods=['POST'])
 @jwt_required()
 def create_consolidation():
     """
