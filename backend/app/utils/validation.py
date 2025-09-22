@@ -39,7 +39,13 @@ def validate_project_data(data: Dict[str, Any], required_fields: List[str] = Non
     if 'project_code' in data:
         if not re.match(r'^[A-Z0-9-_]{2,20}$', data['project_code']):
             errors.append("Project code must be 2-20 characters, alphanumeric, hyphens and underscores only")
-    
+
+    # Validate project_status (PostgreSQL ENUM constraint)
+    if 'project_status' in data and data['project_status']:
+        valid_statuses = ['ongoing', 'completed']
+        if data['project_status'] not in valid_statuses:
+            errors.append(f"Project status must be one of: {', '.join(valid_statuses)}")
+
     # Validate budget
     if 'budget' in data and data['budget'] is not None:
         try:
