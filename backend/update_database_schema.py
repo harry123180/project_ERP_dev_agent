@@ -25,8 +25,9 @@ try:
         db.create_all()
         print("Database schema updated successfully")
 
-        # Check if request_orders table has new columns
-        result = db.engine.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'request_orders'")
+        # Check if request_orders table has new columns using text()
+        from sqlalchemy import text
+        result = db.session.execute(text("SELECT column_name FROM information_schema.columns WHERE table_name = 'request_orders'"))
         columns = [row[0] for row in result]
         print(f"RequestOrder columns: {columns}")
 
@@ -43,6 +44,18 @@ try:
 
         if not missing_fields:
             print("All required columns exist - schema update successful!")
+
+            # Test creating a basic RequestOrder to ensure the model works
+            from app.models.request_order import RequestOrder
+            print("Testing RequestOrder model instantiation...")
+            test_order = RequestOrder(
+                request_order_no='TEST001',
+                requester_id=1,
+                requester_name='Test User',
+                usage_type='daily',
+                is_urgent=False
+            )
+            print("RequestOrder model works correctly!")
         else:
             print(f"Missing columns: {missing_fields}")
 
