@@ -708,6 +708,92 @@ def create_consolidation():
         }), 500
 
 
+@delivery_bp.route('/consolidation/<consolidation_id>', methods=['GET'])
+@jwt_required()
+def get_consolidation_details(consolidation_id):
+    """
+    Get single consolidation details
+    """
+    try:
+        # Get consolidation info
+        consol_query = text("""
+            SELECT
+                sc.*,
+                (SELECT COUNT(*) FROM consolidation_pos cp WHERE cp.consolidation_id = sc.consolidation_id) as po_count,
+                (SELECT COUNT(*)
+                 FROM purchase_order_items poi
+                 JOIN consolidation_pos cp ON poi.purchase_order_no = cp.purchase_order_no
+                 WHERE cp.consolidation_id = sc.consolidation_id) as total_items
+            FROM shipment_consolidations sc
+            WHERE sc.consolidation_id = :consolidation_id
+        """)
+
+        consol_result = db.session.execute(consol_query, {'consolidation_id': consolidation_id}).fetchone()
+
+        if not consol_result:
+            return jsonify({
+                'success': False,
+                'error': 'Consolidation not found'
+            }), 404
+
+        # Get POs in this consolidation
+        po_query = text("""
+            SELECT
+                po.*,
+                s.supplier_name,
+                s.supplier_region,
+                (SELECT COUNT(*) FROM purchase_order_items poi WHERE poi.purchase_order_no = po.purchase_order_no) as item_count
+            FROM purchase_orders po
+            JOIN consolidation_pos cp ON po.purchase_order_no = cp.purchase_order_no
+            LEFT JOIN suppliers s ON po.supplier_id = s.supplier_id
+            WHERE cp.consolidation_id = :consolidation_id
+            ORDER BY po.purchase_order_no
+        """)
+
+        po_results = db.session.execute(po_query, {'consolidation_id': consolidation_id}).fetchall()
+
+        pos_data = []
+        for po_row in po_results:
+            pos_data.append({
+                'purchase_order_no': po_row.purchase_order_no,
+                'supplier_name': po_row.supplier_name,
+                'delivery_status': po_row.delivery_status,
+                'logistics_status': po_row.delivery_status,  # Use delivery_status as logistics_status
+                'expected_delivery_date': str(po_row.expected_delivery_date) if po_row.expected_delivery_date else None,
+                'actual_delivery_date': str(po_row.actual_delivery_date) if po_row.actual_delivery_date else None,
+                'remarks': po_row.remarks,
+                'tracking_number': po_row.tracking_number if hasattr(po_row, 'tracking_number') else None,
+                'item_count': po_row.item_count
+            })
+
+        return jsonify({
+            'success': True,
+            'data': {
+                'consolidation_id': consol_result.consolidation_id,
+                'consolidation_name': consol_result.consolidation_name,
+                'logistics_status': consol_result.logistics_status,
+                'expected_delivery_date': str(consol_result.expected_delivery_date) if consol_result.expected_delivery_date else None,
+                'actual_delivery_date': str(consol_result.actual_delivery_date) if consol_result.actual_delivery_date else None,
+                'carrier': consol_result.carrier,
+                'tracking_number': consol_result.tracking_number,
+                'total_weight': float(consol_result.total_weight) if consol_result.total_weight else 0,
+                'total_volume': float(consol_result.total_volume) if consol_result.total_volume else 0,
+                'remarks': consol_result.remarks,
+                'po_count': consol_result.po_count,
+                'total_items': consol_result.total_items,
+                'purchase_orders': pos_data,
+                'created_at': str(consol_result.created_at) if consol_result.created_at else None,
+                'updated_at': str(consol_result.updated_at) if consol_result.updated_at else None
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting consolidation details: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @delivery_bp.route('/consolidation/<consolidation_id>/status', methods=['PUT'])
 @jwt_required()
 def update_consolidation_status(consolidation_id):
