@@ -103,11 +103,11 @@ with app.app_context():
                         INSERT INTO purchase_order_items (
                             purchase_order_no, item_name, item_specification,
                             item_quantity, item_unit, unit_price,
-                            line_subtotal_int, delivery_status
+                            line_subtotal_int, delivery_status, line_status
                         ) VALUES (
                             :po_no, :item_name, :spec,
                             :qty, 'pcs', 1000,
-                            :subtotal, 'not_shipped'
+                            :subtotal, 'not_shipped', 'active'
                         )
                     """), {
                         'po_no': po_no,
