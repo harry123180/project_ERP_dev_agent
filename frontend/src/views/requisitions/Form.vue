@@ -566,9 +566,27 @@ const fetchProjects = async () => {
 const fetchCategories = async () => {
   try {
     const response = await request.get('/item-categories')
-    if (response.data.success) {
+    console.log('Categories response:', response.data) // 除錯用
+
+    if (response.data.success && Array.isArray(response.data.data)) {
       // 只載入啟用的類別
-      categories.value = response.data.data.filter((cat: any) => cat.is_active)
+      const activeCategories = response.data.data.filter((cat: any) => cat.is_active)
+
+      if (activeCategories.length > 0) {
+        categories.value = activeCategories
+        console.log('Loaded categories:', categories.value.length) // 除錯用
+      } else {
+        // 如果沒有啟用的類別，至少提供一個選項
+        categories.value = [
+          { category_code: 'other', category_name: '其他' }
+        ]
+        console.warn('No active categories found, using default')
+      }
+    } else {
+      console.error('Invalid categories response format:', response.data)
+      categories.value = [
+        { category_code: 'other', category_name: '其他' }
+      ]
     }
   } catch (error) {
     console.error('Failed to fetch categories:', error)
@@ -576,6 +594,7 @@ const fetchCategories = async () => {
     categories.value = [
       { category_code: 'other', category_name: '其他' }
     ]
+    ElMessage.warning('無法載入物品種類，使用預設選項')
   }
 }
 
