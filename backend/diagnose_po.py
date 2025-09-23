@@ -208,7 +208,6 @@ def diagnose_po(po_number):
             SELECT
                 po.purchase_order_no,
                 po.supplier_name,
-                po.supplier_region,
                 po.delivery_status,
                 po.shipped_at,
                 poi.detail_id,
