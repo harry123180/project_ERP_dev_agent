@@ -59,7 +59,7 @@
             {{ formatDate(consolidation.actual_delivery_date) }}
           </el-descriptions-item>
           <el-descriptions-item label="採購單數量">
-            {{ consolidation.pos_count || 0 }}
+            {{ consolidation.po_count || 0 }}
           </el-descriptions-item>
           <el-descriptions-item label="總物品數量">
             {{ calculateTotalItems() }}
@@ -103,7 +103,7 @@
         <template #header>
           <h3>包含的採購單</h3>
         </template>
-        <el-table :data="consolidation.pos_in_consolidation" stripe>
+        <el-table :data="consolidation.purchase_orders" stripe>
           <el-table-column prop="purchase_order_no" label="採購單號" width="150" />
           <el-table-column prop="supplier_name" label="供應商" width="200" />
           <el-table-column label="交貨狀態" width="100">
@@ -252,8 +252,8 @@ const getConsolidationDetail = async () => {
 
 // 計算總物品數量
 const calculateTotalItems = () => {
-  if (consolidation.value.pos_in_consolidation) {
-    return consolidation.value.pos_in_consolidation.reduce((total: number, po: any) => {
+  if (consolidation.value.purchase_orders) {
+    return consolidation.value.purchase_orders.reduce((total: number, po: any) => {
       return total + (po.items_count || po.item_count || 0)
     }, 0)
   }
