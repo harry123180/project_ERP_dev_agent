@@ -195,7 +195,16 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column label="備註" prop="status_note" min-width="150" show-overflow-tooltip />
+          <el-table-column label="備註" prop="status_note" min-width="200">
+            <template #default="{ row }">
+              <div class="remarks-cell" v-if="row.status_note">
+                <div v-for="(line, index) in formatRemarks(row.status_note)" :key="index" class="remark-line">
+                  {{ line }}
+                </div>
+              </div>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </div>
@@ -390,6 +399,13 @@ const getAcceptanceStatusType = (status?: string) => {
   return typeMap[status || 'pending'] || 'warning'
 }
 
+// 格式化備註，支援換行顯示
+const formatRemarks = (remarks?: string) => {
+  if (!remarks) return []
+  // 支援 \n 或實際換行符號
+  return remarks.split(/\r?\n/).filter(line => line.trim())
+}
+
 // Event handlers
 const handleBack = () => {
   router.go(-1)
@@ -493,6 +509,19 @@ onMounted(() => {
     font-family: Monaco, 'Courier New', monospace;
     font-weight: 500;
     color: #409eff;
+  }
+
+  .remarks-cell {
+    .remark-line {
+      padding: 2px 0;
+      line-height: 1.5;
+
+      &:not(:last-child) {
+        border-bottom: 1px dashed #e4e7ed;
+        margin-bottom: 4px;
+        padding-bottom: 4px;
+      }
+    }
   }
 }
 

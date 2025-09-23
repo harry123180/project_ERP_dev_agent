@@ -372,6 +372,31 @@ def update_po_remarks(po_number):
             'po_number': po_number
         })
 
+        # Update related requisition items with tracking info
+        # Build status note with tracking information
+        status_note_parts = []
+        if remarks:
+            status_note_parts.append(f"物流追蹤: {remarks}")
+
+        if status_note_parts:
+            status_note = '\n'.join(status_note_parts)
+
+            # Update requisition items that are linked to this PO
+            update_req_items_query = text("""
+                UPDATE request_order_items roi
+                SET status_note = COALESCE(roi.status_note || E'\\n', '') || :status_note,
+                    updated_at = :updated_at
+                FROM purchase_order_items poi
+                WHERE poi.source_detail_id = roi.detail_id
+                AND poi.purchase_order_no = :po_number
+            """)
+
+            db.session.execute(update_req_items_query, {
+                'status_note': status_note,
+                'updated_at': datetime.utcnow(),
+                'po_number': po_number
+            })
+
         db.session.commit()
 
         return jsonify({
@@ -442,6 +467,51 @@ def update_po_status(po_number):
                 WHERE purchase_order_no = :po_number
             """)
             db.session.execute(update_items_query, {'po_number': po_number})
+
+        # Update related requisition items with delivery info
+        status_note_parts = []
+
+        # Add expected delivery date
+        if expected_date:
+            status_note_parts.append(f"預計到貨日: {expected_date}")
+
+        # Add actual delivery date if delivered
+        if actual_date and new_status == 'delivered':
+            status_note_parts.append(f"實際到貨日: {actual_date}")
+
+        # Add status update
+        status_map = {
+            'pending': '待處理',
+            'ordered': '已訂購',
+            'shipped': '已出貨',
+            'arrived': '已到貨',
+            'delivered': '已交付'
+        }
+        status_text = status_map.get(new_status, new_status)
+        status_note_parts.append(f"交貨狀態: {status_text}")
+
+        # Add remarks if provided
+        if remarks:
+            status_note_parts.append(f"物流追蹤: {remarks}")
+
+        if status_note_parts:
+            status_note = '\n'.join(status_note_parts)
+
+            # Update requisition items that are linked to this PO
+            update_req_items_query = text("""
+                UPDATE request_order_items roi
+                SET status_note = :status_note,
+                    updated_at = :updated_at
+                FROM purchase_order_items poi
+                WHERE poi.source_detail_id = roi.detail_id
+                AND poi.purchase_order_no = :po_number
+            """)
+
+            db.session.execute(update_req_items_query, {
+                'status_note': status_note,
+                'updated_at': datetime.utcnow(),
+                'po_number': po_number
+            })
 
         db.session.commit()
 
