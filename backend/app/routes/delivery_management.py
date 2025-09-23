@@ -849,8 +849,9 @@ def update_consolidation_status(consolidation_id):
                 }
             }), 404
 
-        # If delivered, update all POs in consolidation
+        # Update POs status based on consolidation status
         if new_status == 'delivered':
+            # If consolidation is delivered, update all POs to 'arrived'
             update_pos_query = text("""
                 UPDATE purchase_orders
                 SET delivery_status = 'arrived',
@@ -861,6 +862,21 @@ def update_consolidation_status(consolidation_id):
 
             db.session.execute(update_pos_query, {
                 'actual_date': data.get('actual_delivery_date'),
+                'updated_at': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                'consolidation_id': consolidation_id
+            })
+        elif new_status == 'shipped':
+            # If consolidation is shipped, update all POs to 'shipped' so they appear in receiving
+            update_pos_query = text("""
+                UPDATE purchase_orders
+                SET delivery_status = 'shipped',
+                    shipped_at = COALESCE(:shipped_date, CURRENT_TIMESTAMP),
+                    updated_at = :updated_at
+                WHERE consolidation_id = :consolidation_id
+            """)
+
+            db.session.execute(update_pos_query, {
+                'shipped_date': data.get('shipped_date'),
                 'updated_at': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                 'consolidation_id': consolidation_id
             })
