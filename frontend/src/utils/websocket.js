@@ -28,8 +28,12 @@ class WebSocketManager {
           return
         }
 
-        // Create socket connection
-        this.socket = io('http://localhost:5000', {
+        // Create socket connection - use dynamic host
+        const wsUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:5000'
+          : `http://${window.location.hostname}:5000`
+
+        this.socket = io(wsUrl, {
           auth: {
             token: token
           },
