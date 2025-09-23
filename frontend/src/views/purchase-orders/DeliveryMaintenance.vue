@@ -757,7 +757,7 @@ const submitStatusUpdate = async () => {
   try {
     await deliveryApi.updateDeliveryStatus(statusDialog.poNumber, {
       new_status: statusDialog.newStatus,
-      expected_date: statusDialog.expectedDeliveryDate,
+      expected_delivery_date: statusDialog.expectedDeliveryDate,
       remarks: statusDialog.remarks
     })
     
@@ -854,7 +854,7 @@ const submitConsolStatusUpdate = async () => {
       new_status: consolStatusDialog.newStatus,
       carrier: consolStatusDialog.carrier,
       tracking_number: consolStatusDialog.trackingNumber,
-      expected_date: consolStatusDialog.expectedDeliveryDate,
+      expected_delivery_date: consolStatusDialog.expectedDeliveryDate,
       remarks: consolStatusDialog.remarks
     })
     

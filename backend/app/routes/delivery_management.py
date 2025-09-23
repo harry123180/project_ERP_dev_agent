@@ -881,7 +881,7 @@ def update_consolidation_status(consolidation_id):
     """
     try:
         data = request.get_json()
-        new_status = data.get('logistics_status')
+        new_status = data.get('new_status') or data.get('logistics_status')
 
         if not new_status:
             return jsonify({
@@ -892,10 +892,20 @@ def update_consolidation_status(consolidation_id):
                 }
             }), 400
 
+        # Get additional parameters
+        carrier = data.get('carrier', '')
+        tracking_number = data.get('tracking_number', '')
+        expected_date = data.get('expected_delivery_date')
+        remarks = data.get('remarks', '')
+
         # Update consolidation status
         update_query = text("""
             UPDATE shipment_consolidations
             SET logistics_status = :new_status,
+                carrier = :carrier,
+                tracking_number = :tracking_number,
+                expected_delivery_date = :expected_date,
+                remarks = :remarks,
                 actual_delivery_date = :actual_date,
                 logistics_notes = :logistics_notes,
                 updated_at = :updated_at
@@ -904,8 +914,12 @@ def update_consolidation_status(consolidation_id):
 
         result = db.session.execute(update_query, {
             'new_status': new_status,
+            'carrier': carrier,
+            'tracking_number': tracking_number,
+            'expected_date': expected_date,
+            'remarks': remarks,
             'actual_date': data.get('actual_delivery_date'),
-            'logistics_notes': data.get('logistics_notes'),
+            'logistics_notes': data.get('logistics_notes', remarks),
             'updated_at': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
             'consolidation_id': consolidation_id
         })
