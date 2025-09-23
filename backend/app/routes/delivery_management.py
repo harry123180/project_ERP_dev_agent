@@ -244,13 +244,14 @@ def get_consolidation_list():
         # Format consolidation data
         consolidations_data = []
         for row in results:
-            # Get POs in this consolidation
+            # Get POs in this consolidation with item count
             po_query = text("""
                 SELECT
                     po.purchase_order_no,
                     po.supplier_name,
                     po.delivery_status,
-                    po.subtotal_int
+                    po.subtotal_int,
+                    (SELECT COUNT(*) FROM purchase_order_items poi WHERE poi.purchase_order_no = po.purchase_order_no) as item_count
                 FROM purchase_orders po
                 JOIN consolidation_pos cp ON po.purchase_order_no = cp.purchase_order_no
                 WHERE cp.consolidation_id = :consolidation_id
@@ -260,12 +261,17 @@ def get_consolidation_list():
             po_results = db.session.execute(po_query, {'consolidation_id': row.consolidation_id}).fetchall()
 
             pos_data = []
+            total_items_in_consolidation = 0
             for po_row in po_results:
+                item_count = po_row.item_count or 0
+                total_items_in_consolidation += item_count
                 pos_data.append({
                     'purchase_order_no': po_row.purchase_order_no,
                     'supplier_name': po_row.supplier_name,
                     'delivery_status': po_row.delivery_status,
-                    'subtotal': po_row.subtotal_int
+                    'subtotal': po_row.subtotal_int,
+                    'item_count': item_count,
+                    'items_count': item_count  # Include both for compatibility
                 })
 
             consolidation_data = {
@@ -283,6 +289,7 @@ def get_consolidation_list():
                 'remarks': row.remarks,
                 'po_count': row.po_count,
                 'total_value': row.total_value or 0,
+                'total_items': total_items_in_consolidation,  # Add total items count
                 'purchase_orders': pos_data,
                 'created_at': str(row.created_at) if row.created_at else None,
                 'updated_at': str(row.updated_at) if row.updated_at else None
