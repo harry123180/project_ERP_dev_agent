@@ -298,14 +298,7 @@ const formRef = ref<FormInstance>()
 // State
 const submitting = ref(false)
 const projects = ref<any[]>([])
-const categories = ref<any[]>([
-  { category_code: 'office', category_name: '辦公用品' },
-  { category_code: 'electronic', category_name: '電子設備' },
-  { category_code: 'furniture', category_name: '辦公家具' },
-  { category_code: 'consumable', category_name: '耗材用品' },
-  { category_code: 'tool', category_name: '工具設備' },
-  { category_code: 'other', category_name: '其他' }
-])
+const categories = ref<any[]>([])
 
 // Computed
 const isEdit = computed(() => !!route.params.id)
@@ -570,6 +563,22 @@ const fetchProjects = async () => {
   }
 }
 
+const fetchCategories = async () => {
+  try {
+    const response = await request.get('/item-categories')
+    if (response.data.success) {
+      // 只載入啟用的類別
+      categories.value = response.data.data.filter((cat: any) => cat.is_active)
+    }
+  } catch (error) {
+    console.error('Failed to fetch categories:', error)
+    // 如果載入失敗，使用預設類別
+    categories.value = [
+      { category_code: 'other', category_name: '其他' }
+    ]
+  }
+}
+
 const loadRequisition = async () => {
   if (!isEdit.value) return
 
@@ -607,8 +616,12 @@ const loadRequisition = async () => {
 
 // Initialize with one empty item for new requisitions
 onMounted(async () => {
-  await fetchProjects()
-  
+  // 並行載入專案和類別
+  await Promise.all([
+    fetchProjects(),
+    fetchCategories()
+  ])
+
   if (isEdit.value) {
     await loadRequisition()
   } else {
