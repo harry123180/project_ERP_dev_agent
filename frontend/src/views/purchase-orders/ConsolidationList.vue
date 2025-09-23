@@ -24,7 +24,7 @@
         <el-col :span="6">
           <el-card class="stat-card info">
             <div class="stat-content">
-              <div class="stat-number">{{ summary.total_pos_in_consolidation }}</div>
+              <div class="stat-number">{{ summary.total_purchase_orders }}</div>
               <div class="stat-label">集運採購單數</div>
             </div>
           </el-card>
@@ -88,7 +88,7 @@
             <div class="expand-content">
               <h4>集運內採購單詳情</h4>
               <el-table 
-                :data="row.pos_in_consolidation" 
+                :data="row.purchase_orders" 
                 size="small"
                 :show-header="true"
               >
@@ -133,7 +133,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="pos_count" label="採購單數" width="100" />
+        <el-table-column prop="po_count" label="採購單數" width="100" />
         <el-table-column prop="carrier" label="承運商" width="120">
           <template #default="{ row }">
             {{ row.carrier || '-' }}
@@ -348,7 +348,7 @@ const saving = ref(false)
 const consolidationData = ref<ConsolidationOrder[]>([])
 const summary = ref({
   total_consolidations: 0,
-  total_pos_in_consolidation: 0,
+  total_purchase_orders: 0,
   status_distribution: {} as Record<string, number>
 })
 
@@ -448,8 +448,8 @@ const loadMockData = () => {
       carrier: 'DHL Express',
       tracking_number: '1234567890',
       remarks: 'DHL追蹤號：1234567890，預計海關清關：2025-01-20',
-      pos_count: 2,
-      pos_in_consolidation: [
+      po_count: 2,
+      purchase_orders: [
         {
           purchase_order_no: 'PO20250110002',
           supplier_name: '美商英特爾',
@@ -484,8 +484,8 @@ const loadMockData = () => {
       carrier: 'FedEx',
       tracking_number: '9876543210',
       remarks: 'FedEx追蹤號：9876543210，已順利到貨',
-      pos_count: 1,
-      pos_in_consolidation: [
+      po_count: 1,
+      purchase_orders: [
         {
           purchase_order_no: 'PO20250109001',
           supplier_name: '韓商三星',
@@ -505,7 +505,7 @@ const loadMockData = () => {
   
   summary.value = {
     total_consolidations: 2,
-    total_pos_in_consolidation: 3,
+    total_purchase_orders: 3,
     status_distribution: {
       shipped: 0,
       foreign_customs: 1,

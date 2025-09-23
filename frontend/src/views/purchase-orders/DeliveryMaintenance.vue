@@ -275,7 +275,7 @@
                     <el-col :span="12">
                       <div class="info-item">
                         <span class="label">採購單數量：</span>
-                        <span class="value">{{ consol.pos_count || consol.pos_in_consolidation?.length || 0 }}</span>
+                        <span class="value">{{ consol.po_count || consol.purchase_orders?.length || 0 }}</span>
                       </div>
                     </el-col>
                     <el-col :span="12">
@@ -519,8 +519,8 @@ interface PurchaseOrder {
 interface Consolidation {
   consolidation_id: string
   consolidation_name?: string
-  pos_count?: number
-  pos_in_consolidation?: Array<{
+  po_count?: number
+  purchase_orders?: Array<{
     po_number: string
     purchase_order_no: string
     supplier_name: string
@@ -828,8 +828,8 @@ const viewConsolidation = (consol: Consolidation) => {
 // 更新集運單狀態
 // 計算集運單總物品數量
 const calculateTotalItems = (consol: Consolidation) => {
-  if (consol.pos_in_consolidation) {
-    return consol.pos_in_consolidation.reduce((total, po) => {
+  if (consol.purchase_orders) {
+    return consol.purchase_orders.reduce((total, po) => {
       return total + (po.items_count || po.item_count || 0)
     }, 0)
   }
