@@ -31,16 +31,16 @@ def diagnose_po(po_number):
         # 1. 檢查採購單基本資訊
         print("【1. 採購單基本資訊】")
 
-        # 先檢查資料庫中有哪些欄位
+        # 先檢查資料庫中有哪些欄位 (PostgreSQL版本)
         check_columns = text("""
-            SELECT sql FROM sqlite_master
-            WHERE type='table' AND name='purchase_orders'
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'purchase_orders'
+            AND column_name = 'supplier_region'
         """)
 
         table_info = db.session.execute(check_columns).fetchone()
-        has_supplier_region = False
-        if table_info and 'supplier_region' in str(table_info[0]):
-            has_supplier_region = True
+        has_supplier_region = table_info is not None
 
         # 根據欄位存在與否建構查詢
         if has_supplier_region:
