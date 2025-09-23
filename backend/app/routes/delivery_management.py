@@ -740,7 +740,7 @@ def get_consolidation_details(consolidation_id):
         po_query = text("""
             SELECT
                 po.*,
-                s.supplier_name,
+                s.supplier_name_en,
                 s.supplier_region,
                 (SELECT COUNT(*) FROM purchase_order_items poi WHERE poi.purchase_order_no = po.purchase_order_no) as item_count
             FROM purchase_orders po
@@ -754,15 +754,17 @@ def get_consolidation_details(consolidation_id):
 
         pos_data = []
         for po_row in po_results:
+            # The supplier_name is already in the PO record, use that
             pos_data.append({
                 'purchase_order_no': po_row.purchase_order_no,
-                'supplier_name': po_row.supplier_name,
+                'supplier_name': po_row.supplier_name,  # This is from purchase_orders table
+                'supplier_name_en': po_row.supplier_name_en if hasattr(po_row, 'supplier_name_en') else po_row.supplier_name,
                 'delivery_status': po_row.delivery_status,
                 'logistics_status': po_row.delivery_status,  # Use delivery_status as logistics_status
                 'expected_delivery_date': str(po_row.expected_delivery_date) if po_row.expected_delivery_date else None,
                 'actual_delivery_date': str(po_row.actual_delivery_date) if po_row.actual_delivery_date else None,
                 'remarks': po_row.remarks,
-                'tracking_number': po_row.tracking_number if hasattr(po_row, 'tracking_number') else None,
+                'tracking_number': po_row.tracking_no if hasattr(po_row, 'tracking_no') else None,
                 'item_count': po_row.item_count
             })
 
