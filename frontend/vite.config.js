@@ -33,6 +33,12 @@ export default defineConfig({
   server: {
     port: 5174,
     host: '0.0.0.0',
+    // 允許的主機名稱
+    allowedHosts: [
+      'localhost',
+      'order.tsicstudio.com',
+      '.tsicstudio.com' // 允許所有 tsicstudio.com 的子域名
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
