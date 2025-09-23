@@ -267,6 +267,7 @@ import { PageHeader } from '@/components'
 import { useRequisitionStore, useAuthStore } from '@/stores'
 import { projectsApi } from '@/api'
 import type { CreateRequisitionRequest } from '@/api/requisition'
+import request from '@/api'
 
 interface RequisitionItem {
   item_name: string
