@@ -156,7 +156,7 @@ def create_app(config_name=None):
     
     
     # Register blueprints
-    from app.routes import auth, users, suppliers, requisitions, purchase_orders, inventory, accounting, projects, storage, logistics, acceptance, delivery_management, profile, receiving, putaway
+    from app.routes import auth, users, suppliers, requisitions, purchase_orders, inventory, accounting, projects, storage, logistics, acceptance, delivery_management, profile, receiving, putaway, item_categories
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(users.bp)
@@ -173,6 +173,7 @@ def create_app(config_name=None):
     app.register_blueprint(delivery_management.delivery_bp)
     app.register_blueprint(receiving.bp)
     app.register_blueprint(putaway.bp)
+    app.register_blueprint(item_categories.item_categories_bp)
     
     # EMERGENCY FIX: Removed manual CORS handlers that were conflicting
     # Flask-CORS should handle all CORS needs without manual intervention

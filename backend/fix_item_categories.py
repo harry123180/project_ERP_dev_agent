@@ -43,7 +43,15 @@ with app.app_context():
         ('spare_part', '備品'),
         ('software', '軟體'),
         ('service', '服務'),
-        ('other', '其他')
+        ('other', '其他'),
+        ('electronic', '電子產品'),
+        ('furniture', '家具'),
+        ('stationery', '文具'),
+        ('chemical', '化學品'),
+        ('safety', '安全用品'),
+        ('cleaning', '清潔用品'),
+        ('food', '食品'),
+        ('medical', '醫療用品')
     ]
 
     for code, name in categories_to_add:

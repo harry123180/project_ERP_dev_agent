@@ -281,6 +281,12 @@ const router = createRouter({
               name: 'POSettings',
               component: () => import('@/views/system/POSettings.vue'),
               meta: { title: '採購單資訊設定' }
+            },
+            {
+              path: 'item-categories',
+              name: 'ItemCategories',
+              component: () => import('@/views/settings/ItemCategories.vue'),
+              meta: { title: '物品種類管理' }
             }
           ]
         }
